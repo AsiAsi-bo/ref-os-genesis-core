@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Globe, Search, ChevronLeft, ChevronRight, RotateCw, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,6 +9,20 @@ const WebBrowser: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [history, setHistory] = useState(['https://refsearch.com']);
   const [historyIndex, setHistoryIndex] = useState(0);
+  
+  const handleNavigation = () => {
+    if (url !== history[historyIndex]) {
+      // Add to history if navigating to a new URL
+      setHistory([...history.slice(0, historyIndex + 1), url]);
+      setHistoryIndex(historyIndex + 1);
+    }
+    
+    // Simulate page loading
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  };
   
   const homePage = (
     <div className="h-full flex flex-col items-center justify-center bg-refos-taskbar p-8">
@@ -63,20 +76,6 @@ const WebBrowser: React.FC = () => {
       </div>
     </div>
   );
-  
-  const handleNavigation = () => {
-    if (url !== history[historyIndex]) {
-      // Add to history if navigating to a new URL
-      setHistory([...history.slice(0, historyIndex + 1), url]);
-      setHistoryIndex(historyIndex + 1);
-    }
-    
-    // Simulate page loading
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-  };
   
   const goBack = () => {
     if (historyIndex > 0) {

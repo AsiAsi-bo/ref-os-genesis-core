@@ -5,7 +5,12 @@ import {
   Folder, 
   FileText, 
   Calculator, 
-  Settings
+  Settings,
+  Cloud,
+  Calendar,
+  Globe,
+  Terminal,
+  Bot
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -17,6 +22,11 @@ const Desktop: React.FC = () => {
     { name: 'fileExplorer', title: 'File Explorer', icon: <Folder size={24} /> },
     { name: 'notepad', title: 'Notepad', icon: <FileText size={24} /> },
     { name: 'calculator', title: 'Calculator', icon: <Calculator size={24} /> },
+    { name: 'weather', title: 'Weather', icon: <Cloud size={24} /> },
+    { name: 'calendar', title: 'Calendar', icon: <Calendar size={24} /> },
+    { name: 'browser', title: 'Web Browser', icon: <Globe size={24} /> },
+    { name: 'terminal', title: 'Terminal', icon: <Terminal size={24} /> },
+    { name: 'refy', title: 'Refy Assistant', icon: <Bot size={24} /> },
     { name: 'settings', title: 'Settings', icon: <Settings size={24} /> }
   ];
 

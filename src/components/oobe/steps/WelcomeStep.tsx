@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Bot } from 'lucide-react';
 
 const WelcomeStep: React.FC = () => {
   return (
@@ -27,6 +28,19 @@ const WelcomeStep: React.FC = () => {
         <li>Configure privacy settings</li>
         <li>Complete final setup steps</li>
       </ul>
+      <div className="mt-6 p-4 bg-refos-primary/10 rounded-lg border border-refos-primary/20 flex items-start">
+        <div className="bg-refos-primary/20 h-10 w-10 rounded-full flex items-center justify-center mr-3 mt-1">
+          <Bot size={20} className="text-refos-primary" />
+        </div>
+        <div>
+          <h4 className="font-medium text-refos-primary">Meet Refy, Your Virtual Assistant</h4>
+          <p className="text-white/80 mt-1">
+            Refy is your personal virtual assistant in Ref OS. You can ask Refy to help you navigate the system,
+            open applications, search for information, and much more. Look for the Refy icon on your desktop
+            after completing the setup process.
+          </p>
+        </div>
+      </div>
       <p className="text-white/80 pt-2">
         Click "Next" to continue with the setup process.
       </p>

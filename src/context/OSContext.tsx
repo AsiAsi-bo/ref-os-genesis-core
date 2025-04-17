@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-export type AppName = 'fileExplorer' | 'notepad' | 'calculator' | 'settings';
+export type AppName = 'fileExplorer' | 'notepad' | 'calculator' | 'settings' | 'weather' | 'calendar' | 'browser' | 'terminal' | 'refy';
 
 export interface App {
   id: string;
@@ -65,6 +65,41 @@ const defaultAppConfigs: Record<AppName, Omit<App, 'id' | 'isOpen' | 'isMinimize
     icon: 'settings',
     position: { x: 250, y: 250 },
     size: { width: 550, height: 500 }
+  },
+  weather: {
+    name: 'weather',
+    title: 'Weather',
+    icon: 'cloud',
+    position: { x: 300, y: 150 },
+    size: { width: 450, height: 400 }
+  },
+  calendar: {
+    name: 'calendar',
+    title: 'Calendar',
+    icon: 'calendar',
+    position: { x: 350, y: 200 },
+    size: { width: 550, height: 500 }
+  },
+  browser: {
+    name: 'browser',
+    title: 'Web Browser',
+    icon: 'globe',
+    position: { x: 400, y: 150 },
+    size: { width: 700, height: 500 }
+  },
+  terminal: {
+    name: 'terminal',
+    title: 'Terminal',
+    icon: 'terminal',
+    position: { x: 250, y: 300 },
+    size: { width: 600, height: 400 }
+  },
+  refy: {
+    name: 'refy',
+    title: 'Refy Assistant',
+    icon: 'bot',
+    position: { x: 450, y: 250 },
+    size: { width: 400, height: 550 }
   }
 };
 

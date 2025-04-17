@@ -10,6 +10,11 @@ import FileExplorer from '../apps/FileExplorer';
 import Notepad from '../apps/Notepad';
 import Calculator from '../apps/Calculator';
 import Settings from '../apps/Settings';
+import Weather from '../apps/Weather';
+import Calendar from '../apps/Calendar';
+import Browser from '../apps/Browser';
+import Terminal from '../apps/Terminal';
+import Refy from '../apps/Refy';
 import OOBE from '../oobe/OOBE';
 
 const RefOSContent: React.FC = () => {
@@ -26,6 +31,16 @@ const RefOSContent: React.FC = () => {
         return <Calculator />;
       case 'settings':
         return <Settings />;
+      case 'weather':
+        return <Weather />;
+      case 'calendar':
+        return <Calendar />;
+      case 'browser':
+        return <Browser />;
+      case 'terminal':
+        return <Terminal />;
+      case 'refy':
+        return <Refy />;
       default:
         return <div className="p-4">App not found</div>;
     }

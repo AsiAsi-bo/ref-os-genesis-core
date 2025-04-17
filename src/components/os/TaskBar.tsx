@@ -2,7 +2,7 @@
 import React from 'react';
 import { useOS, AppName } from '@/context/OSContext';
 import { Button } from '@/components/ui/button';
-import { Folder, FileText, Calculator, Settings, Monitor } from 'lucide-react';
+import { Folder, FileText, Calculator, Settings, Monitor, Cloud, Calendar, Globe, Terminal, Bot } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const TaskBar: React.FC = () => {
@@ -14,6 +14,11 @@ const TaskBar: React.FC = () => {
       case 'file-text': return <FileText size={20} />;
       case 'calculator': return <Calculator size={20} />;
       case 'settings': return <Settings size={20} />;
+      case 'cloud': return <Cloud size={20} />;
+      case 'calendar': return <Calendar size={20} />;
+      case 'globe': return <Globe size={20} />;
+      case 'terminal': return <Terminal size={20} />;
+      case 'bot': return <Bot size={20} />;
       default: return <Monitor size={20} />;
     }
   };

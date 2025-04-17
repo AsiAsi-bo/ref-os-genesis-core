@@ -7,7 +7,12 @@ import {
   Calculator, 
   Settings,
   User,
-  Power
+  Power,
+  Cloud,
+  Calendar,
+  Globe,
+  Terminal,
+  Bot
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -34,6 +39,36 @@ const StartMenu: React.FC = () => {
       title: 'Calculator', 
       icon: <Calculator size={24} className="text-green-400" />,
       description: 'Perform calculations'
+    },
+    { 
+      name: 'weather', 
+      title: 'Weather', 
+      icon: <Cloud size={24} className="text-blue-300" />,
+      description: 'Check current weather conditions'
+    },
+    { 
+      name: 'calendar', 
+      title: 'Calendar', 
+      icon: <Calendar size={24} className="text-orange-300" />,
+      description: 'Manage your schedule and events'
+    },
+    { 
+      name: 'browser', 
+      title: 'Web Browser', 
+      icon: <Globe size={24} className="text-blue-500" />,
+      description: 'Browse the web'
+    },
+    { 
+      name: 'terminal', 
+      title: 'Terminal', 
+      icon: <Terminal size={24} className="text-white" />,
+      description: 'Command line interface'
+    },
+    { 
+      name: 'refy', 
+      title: 'Refy Assistant', 
+      icon: <Bot size={24} className="text-purple-400" />,
+      description: 'Your virtual assistant'
     },
     { 
       name: 'settings', 

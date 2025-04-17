@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { OSProvider, useOS, AppName } from '@/context/OSContext';
+import { OOBEProvider, useOOBE } from '@/context/OOBEContext';
 import Desktop from './Desktop';
 import TaskBar from './TaskBar';
 import StartMenu from './StartMenu';
@@ -9,9 +10,11 @@ import FileExplorer from '../apps/FileExplorer';
 import Notepad from '../apps/Notepad';
 import Calculator from '../apps/Calculator';
 import Settings from '../apps/Settings';
+import OOBE from '../oobe/OOBE';
 
 const RefOSContent: React.FC = () => {
   const { apps } = useOS();
+  const { isCompleted } = useOOBE();
 
   const renderApp = (appName: AppName) => {
     switch (appName) {
@@ -30,6 +33,9 @@ const RefOSContent: React.FC = () => {
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-gradient-to-br from-refos-desktop to-refos-desktop/90 select-none">
+      {/* OOBE */}
+      <OOBE />
+
       {/* Desktop */}
       <div className="absolute inset-0 bottom-12">
         <Desktop />
@@ -53,9 +59,11 @@ const RefOSContent: React.FC = () => {
 
 const RefOS: React.FC = () => {
   return (
-    <OSProvider>
-      <RefOSContent />
-    </OSProvider>
+    <OOBEProvider>
+      <OSProvider>
+        <RefOSContent />
+      </OSProvider>
+    </OOBEProvider>
   );
 };
 

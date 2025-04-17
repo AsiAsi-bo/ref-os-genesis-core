@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,14 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				refos: {
+					desktop: '#1A1F2C',
+					taskbar: '#2A2F3C',
+					window: '#3A3F4C',
+					primary: '#8B5CF6',
+					secondary: '#D946EF',
+					accent: '#0EA5E9'
 				}
 			},
 			borderRadius: {
@@ -84,11 +93,33 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'window-open': {
+					'0%': { 
+						opacity: '0',
+						transform: 'scale(0.95)'
+					},
+					'100%': { 
+						opacity: '1',
+						transform: 'scale(1)'
+					}
+				},
+				'window-close': {
+					'0%': { 
+						opacity: '1',
+						transform: 'scale(1)'
+					},
+					'100%': { 
+						opacity: '0',
+						transform: 'scale(0.95)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'window-open': 'window-open 0.2s ease-out',
+				'window-close': 'window-close 0.2s ease-out'
 			}
 		}
 	},

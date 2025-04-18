@@ -4,7 +4,8 @@ import { useInstaller } from '@/context/InstallerContext';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { ArrowRight, Check, Download, HardDrive } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { ArrowRight, Check, Download, HardDrive, ChevronDown, ChevronUp } from 'lucide-react';
 
 const Installer: React.FC = () => {
   const { isInstalling, installProgress, installComplete, startInstallation, completeInstallation, setProgress } = useInstaller();
@@ -42,11 +43,11 @@ const Installer: React.FC = () => {
             </p>
           </div>
           
-          {/* Content */}
-          <div className="flex-1 p-6 flex flex-col">
+          {/* Content with ScrollArea */}
+          <ScrollArea className="flex-1 p-6">
             {!isInstalling ? (
-              <div className="space-y-6 flex-1 flex flex-col">
-                <div className="flex items-center justify-center flex-1">
+              <div className="space-y-6">
+                <div className="flex items-center justify-center">
                   <div className="w-24 h-24 bg-refos-primary/20 rounded-full flex items-center justify-center">
                     <div className="w-16 h-16 bg-refos-primary/40 rounded-full flex items-center justify-center">
                       <div className="w-10 h-10 bg-refos-primary rounded-full flex items-center justify-center">
@@ -67,12 +68,26 @@ const Installer: React.FC = () => {
                       <li>Modern web browser</li>
                       <li>Internet connection</li>
                       <li>No additional hardware required</li>
+                      <li>Minimum screen resolution of 1024x768</li>
+                      <li>WebGL support</li>
+                      <li>JavaScript enabled</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="p-3 bg-refos-primary/10 rounded border border-refos-primary/20 text-sm">
+                    <p className="text-white/90">What's included:</p>
+                    <ul className="list-disc list-inside mt-1 text-white/70 space-y-1">
+                      <li>Modern desktop environment</li>
+                      <li>Pre-installed productivity apps</li>
+                      <li>Responsive design</li>
+                      <li>Customizable settings</li>
+                      <li>Regular updates</li>
                     </ul>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="space-y-6 flex-1 flex flex-col">
+              <div className="space-y-6">
                 <div className="flex-1 flex flex-col items-center justify-center">
                   <Download className={`h-16 w-16 text-refos-primary ${installProgress < 100 ? 'animate-bounce' : ''}`} />
                   <h3 className="text-lg font-medium mt-4">
@@ -99,7 +114,7 @@ const Installer: React.FC = () => {
                 </div>
               </div>
             )}
-          </div>
+          </ScrollArea>
           
           {/* Footer */}
           <div className="p-4 border-t border-white/10 flex justify-between items-center bg-refos-window/80">

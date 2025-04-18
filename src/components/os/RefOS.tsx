@@ -2,6 +2,7 @@
 import React from 'react';
 import { OSProvider, useOS, AppName } from '@/context/OSContext';
 import { OOBEProvider, useOOBE } from '@/context/OOBEContext';
+import { InstallerProvider, useInstaller } from '@/context/InstallerContext';
 import Desktop from './Desktop';
 import TaskBar from './TaskBar';
 import StartMenu from './StartMenu';
@@ -16,10 +17,15 @@ import Browser from '../apps/Browser';
 import Terminal from '../apps/Terminal';
 import Refy from '../apps/Refy';
 import OOBE from '../oobe/OOBE';
+import Installer from '../installer/Installer';
 
 const RefOSContent: React.FC = () => {
   const { apps } = useOS();
   const { isCompleted } = useOOBE();
+  const { installComplete } = useInstaller();
+
+  // Don't render the OS until both installation and OOBE are completed
+  const shouldShowOS = installComplete && isCompleted;
 
   const renderApp = (appName: AppName) => {
     switch (appName) {
@@ -46,39 +52,50 @@ const RefOSContent: React.FC = () => {
     }
   };
 
+  if (!installComplete) {
+    return <Installer />;
+  }
+
   return (
     <div className="h-screen w-screen overflow-hidden bg-gradient-to-br from-refos-desktop to-refos-desktop/90 select-none">
       {/* OOBE */}
       <OOBE />
 
-      {/* Desktop */}
-      <div className="absolute inset-0 bottom-12">
-        <Desktop />
-      </div>
+      {/* Only render desktop components if setup is complete */}
+      {shouldShowOS && (
+        <>
+          {/* Desktop */}
+          <div className="absolute inset-0 bottom-12">
+            <Desktop />
+          </div>
 
-      {/* App Windows */}
-      {apps.map(app => (
-        <DraggableWindow key={app.id} app={app}>
-          {renderApp(app.name)}
-        </DraggableWindow>
-      ))}
+          {/* App Windows */}
+          {apps.map(app => (
+            <DraggableWindow key={app.id} app={app}>
+              {renderApp(app.name)}
+            </DraggableWindow>
+          ))}
 
-      {/* Start Menu */}
-      <StartMenu />
+          {/* Start Menu */}
+          <StartMenu />
 
-      {/* TaskBar */}
-      <TaskBar />
+          {/* TaskBar */}
+          <TaskBar />
+        </>
+      )}
     </div>
   );
 };
 
 const RefOS: React.FC = () => {
   return (
-    <OOBEProvider>
-      <OSProvider>
-        <RefOSContent />
-      </OSProvider>
-    </OOBEProvider>
+    <InstallerProvider>
+      <OOBEProvider>
+        <OSProvider>
+          <RefOSContent />
+        </OSProvider>
+      </OOBEProvider>
+    </InstallerProvider>
   );
 };
 

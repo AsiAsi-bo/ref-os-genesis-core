@@ -1,10 +1,12 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Bot, Mic, MicOff, Send } from 'lucide-react';
+import { Bot, Mic, MicOff, Send, Key } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
+import { generateAIResponse } from '@/utils/ai';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 type Message = {
   id: string;
@@ -20,27 +22,17 @@ const RefyAssistant: React.FC = () => {
     {
       id: generateId(),
       sender: 'refy',
-      text: 'Hello! I\'m Refy, your virtual assistant. How can I help you today?',
+      text: 'Hello! I\'m Refy, your AI-powered virtual assistant. How can I help you today?',
       timestamp: new Date()
     }
   ]);
   const [input, setInput] = useState('');
   const [isListening, setIsListening] = useState(false);
+  const [apiKey, setApiKey] = useState<string | null>(null);
+  const [showApiDialog, setShowApiDialog] = useState(false);
+  const [tempApiKey, setTempApiKey] = useState('');
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   
-  // Simulate microphone functionality
-  const toggleMicrophone = () => {
-    setIsListening(!isListening);
-    
-    if (!isListening) {
-      // Simulate listening and then receiving voice input
-      setTimeout(() => {
-        setIsListening(false);
-        handleUserMessage("Can you tell me about Ref OS?");
-      }, 3000);
-    }
-  };
-
   // Auto-scroll to bottom when messages change
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -51,7 +43,13 @@ const RefyAssistant: React.FC = () => {
     }
   }, [messages]);
 
-  const handleUserMessage = (text: string) => {
+  const handleApiKeySubmit = () => {
+    setApiKey(tempApiKey);
+    setShowApiDialog(false);
+    setTempApiKey('');
+  };
+
+  const handleUserMessage = async (text: string) => {
     // Add user message
     const userMessage: Message = {
       id: generateId(),
@@ -63,28 +61,28 @@ const RefyAssistant: React.FC = () => {
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     
-    // Simulate assistant thinking
-    setTimeout(() => {
-      const responses = [
-        "I'm here to help you navigate through Ref OS. You can use me to open apps, search for information, or answer questions.",
-        "Ref OS has several apps including File Explorer, Notepad, Calculator, Settings, Weather, Calendar, Web Browser, and Terminal.",
-        "You can customize your desktop through the Settings app. Just ask me to open it for you!",
-        "Need to check the weather? Just ask me to open the Weather app.",
-        "I can help you schedule events in the Calendar app.",
-        "The Terminal app allows you to run commands directly in Ref OS."
-      ];
-      
-      const responseIndex = Math.floor(Math.random() * responses.length);
-      
-      const refyMessage: Message = {
-        id: generateId(),
-        sender: 'refy',
-        text: responses[responseIndex],
-        timestamp: new Date()
-      };
-      
-      setMessages(prev => [...prev, refyMessage]);
-    }, 1500);
+    // Generate AI response
+    const aiResponse = await generateAIResponse(text, apiKey);
+    
+    const refyMessage: Message = {
+      id: generateId(),
+      sender: 'refy',
+      text: aiResponse,
+      timestamp: new Date()
+    };
+    
+    setMessages(prev => [...prev, refyMessage]);
+  };
+
+  const toggleMicrophone = () => {
+    setIsListening(!isListening);
+    
+    if (!isListening) {
+      setTimeout(() => {
+        setIsListening(false);
+        handleUserMessage("Can you tell me about Ref OS?");
+      }, 3000);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -96,14 +94,24 @@ const RefyAssistant: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full bg-refos-window p-4">
-      <div className="flex items-center mb-4">
-        <div className="bg-refos-primary/20 h-10 w-10 rounded-full flex items-center justify-center mr-3">
-          <Bot size={20} className="text-refos-primary" />
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center">
+          <div className="bg-refos-primary/20 h-10 w-10 rounded-full flex items-center justify-center mr-3">
+            <Bot size={20} className="text-refos-primary" />
+          </div>
+          <div>
+            <h3 className="font-medium text-white">Refy</h3>
+            <p className="text-white/60 text-xs">AI Assistant</p>
+          </div>
         </div>
-        <div>
-          <h3 className="font-medium text-white">Refy</h3>
-          <p className="text-white/60 text-xs">Virtual Assistant</p>
-        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-white hover:bg-white/10"
+          onClick={() => setShowApiDialog(true)}
+        >
+          <Key size={20} />
+        </Button>
       </div>
       
       <ScrollArea ref={scrollAreaRef} className="flex-1 pr-4 mb-4">
@@ -157,6 +165,29 @@ const RefyAssistant: React.FC = () => {
           <Send size={20} />
         </Button>
       </form>
+
+      <Dialog open={showApiDialog} onOpenChange={setShowApiDialog}>
+        <DialogContent className="sm:max-w-[425px] bg-refos-window text-white">
+          <DialogHeader>
+            <DialogTitle>Enter Perplexity API Key</DialogTitle>
+            <DialogDescription className="text-white/70">
+              Please enter your Perplexity API key to enable AI responses. We recommend connecting to Supabase for secure key storage.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <Input
+              type="password"
+              value={tempApiKey}
+              onChange={(e) => setTempApiKey(e.target.value)}
+              placeholder="Enter your API key"
+              className="bg-refos-taskbar border-refos-window/30 focus-visible:ring-refos-primary text-white"
+            />
+            <Button onClick={handleApiKeySubmit} className="bg-refos-primary hover:bg-refos-primary/80">
+              Save API Key
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

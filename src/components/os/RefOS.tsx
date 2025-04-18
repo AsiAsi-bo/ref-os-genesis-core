@@ -9,7 +9,7 @@ import DraggableWindow from './DraggableWindow';
 import FileExplorer from '../apps/FileExplorer';
 import Notepad from '../apps/Notepad';
 import Calculator from '../apps/Calculator';
-import Settings from '../apps/Settings';
+import Settings from '../apps/settings/Settings';
 import Weather from '../apps/Weather';
 import Calendar from '../apps/Calendar';
 import Browser from '../apps/Browser';

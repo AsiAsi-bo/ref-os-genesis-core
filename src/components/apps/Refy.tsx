@@ -169,9 +169,9 @@ const RefyAssistant: React.FC = () => {
       <Dialog open={showApiDialog} onOpenChange={setShowApiDialog}>
         <DialogContent className="sm:max-w-[425px] bg-refos-window text-white">
           <DialogHeader>
-            <DialogTitle>Enter Perplexity API Key</DialogTitle>
+            <DialogTitle>Enter OpenAI API Key</DialogTitle>
             <DialogDescription className="text-white/70">
-              Please enter your Perplexity API key to enable AI responses. We recommend connecting to Supabase for secure key storage.
+              Please enter your OpenAI API key to enable AI responses. We recommend connecting to Supabase for secure key storage.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -193,3 +193,4 @@ const RefyAssistant: React.FC = () => {
 };
 
 export default RefyAssistant;
+

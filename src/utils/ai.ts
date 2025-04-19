@@ -4,18 +4,18 @@ export const generateAIResponse = async (
   apiKey: string | null
 ): Promise<string> => {
   if (!apiKey) {
-    return "Please provide your Perplexity API key to enable AI responses.";
+    return "Please provide your OpenAI API key to enable AI responses.";
   }
 
   try {
-    const response = await fetch('https://api.perplexity.ai/chat/completions', {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'llama-3.1-sonar-small-128k-online',
+        model: 'gpt-4.5-preview',
         messages: [
           {
             role: 'system',
@@ -42,3 +42,4 @@ export const generateAIResponse = async (
     return "I apologize, but I'm having trouble connecting to my AI services right now. Please try again later or check your API key.";
   }
 };
+

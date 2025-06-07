@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Monitor, User, Bell, Wifi, Shield, Clock, Info, Palette } from 'lucide-react';
+import { Monitor, User, Bell, Wifi, Shield, Clock, Info, Palette, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSettings } from './hooks/useSettings';
 
@@ -12,6 +12,7 @@ import NetworkSettings from './components/NetworkSettings';
 import PrivacySettings from './components/PrivacySettings';
 import TimeLanguageSettings from './components/TimeLanguageSettings';
 import AboutSettings from './components/AboutSettings';
+import ResetSettings from './components/ResetSettings';
 
 const Settings: React.FC = () => {
   const [activeTab, setActiveTab] = useState('display');
@@ -25,7 +26,8 @@ const Settings: React.FC = () => {
     { id: 'network', name: 'Network', icon: <Wifi size={18} /> },
     { id: 'privacy', name: 'Privacy', icon: <Shield size={18} /> },
     { id: 'time', name: 'Time & Language', icon: <Clock size={18} /> },
-    { id: 'about', name: 'About', icon: <Info size={18} /> }
+    { id: 'about', name: 'About', icon: <Info size={18} /> },
+    { id: 'reset', name: 'Reset', icon: <RotateCcw size={18} /> }
   ];
 
   return (
@@ -91,6 +93,7 @@ const Settings: React.FC = () => {
           />
         )}
         {activeTab === 'about' && <AboutSettings />}
+        {activeTab === 'reset' && <ResetSettings />}
       </div>
     </div>
   );

@@ -12,6 +12,11 @@ interface HomePageProps {
 }
 
 const HomePage: React.FC<HomePageProps> = ({ url, onUrlChange, onNavigate }) => {
+  const handleSiteClick = (siteUrl: string) => {
+    onUrlChange(siteUrl);
+    onNavigate();
+  };
+
   return (
     <div className="h-full flex flex-col items-center justify-center bg-refos-taskbar p-8">
       <div className="mb-6">
@@ -45,18 +50,24 @@ const HomePage: React.FC<HomePageProps> = ({ url, onUrlChange, onNavigate }) => 
       
       <div className="grid grid-cols-4 gap-6 mt-12 w-full max-w-3xl">
         {[
-          { name: 'RefDocs', icon: 'file-text', color: 'bg-blue-500/20' },
-          { name: 'RefMail', icon: 'mail', color: 'bg-green-500/20' },
-          { name: 'RefNews', icon: 'newspaper', color: 'bg-orange-500/20' },
-          { name: 'RefMaps', icon: 'map', color: 'bg-purple-500/20' },
-          { name: 'RefPhotos', icon: 'image', color: 'bg-pink-500/20' },
-          { name: 'RefDrive', icon: 'hard-drive', color: 'bg-yellow-500/20' },
-          { name: 'RefShop', icon: 'shopping-bag', color: 'bg-red-500/20' },
-          { name: 'RefMeet', icon: 'video', color: 'bg-cyan-500/20' }
+          { name: 'RefNews', icon: 'N', color: 'bg-blue-500/20', url: 'refnews.com' },
+          { name: 'RefSocial', icon: 'S', color: 'bg-green-500/20', url: 'refsocial.com' },
+          { name: 'RefShop', icon: 'S', color: 'bg-orange-500/20', url: 'refshop.com' },
+          { name: 'RefWiki', icon: 'W', color: 'bg-purple-500/20', url: 'refwiki.com' },
+          { name: 'RefMail', icon: 'M', color: 'bg-red-500/20', url: '#' },
+          { name: 'RefMaps', icon: 'M', color: 'bg-cyan-500/20', url: '#' },
+          { name: 'RefPhotos', icon: 'P', color: 'bg-pink-500/20', url: '#' },
+          { name: 'RefDrive', icon: 'D', color: 'bg-yellow-500/20', url: '#' }
         ].map((item, index) => (
           <div key={index} className="text-center">
-            <div className={cn("w-16 h-16 rounded-full flex items-center justify-center mx-auto", item.color)}>
-              <div className="text-2xl font-semibold text-white">{item.name.charAt(0)}</div>
+            <div 
+              className={cn(
+                "w-16 h-16 rounded-full flex items-center justify-center mx-auto cursor-pointer hover:scale-105 transition-transform", 
+                item.color
+              )}
+              onClick={() => item.url !== '#' && handleSiteClick(item.url)}
+            >
+              <div className="text-2xl font-semibold text-white">{item.icon}</div>
             </div>
             <div className="mt-2 text-white">{item.name}</div>
           </div>

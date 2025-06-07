@@ -1,7 +1,6 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-export type AppName = 'fileExplorer' | 'notepad' | 'calculator' | 'settings' | 'weather' | 'calendar' | 'browser' | 'terminal' | 'refy';
+export type AppName = 'fileExplorer' | 'notepad' | 'calculator' | 'settings' | 'weather' | 'calendar' | 'browser' | 'terminal' | 'refy' | 'movie';
 
 export interface App {
   id: string;
@@ -100,6 +99,13 @@ const defaultAppConfigs: Record<AppName, Omit<App, 'id' | 'isOpen' | 'isMinimize
     icon: 'bot',
     position: { x: 450, y: 250 },
     size: { width: 400, height: 550 }
+  },
+  movie: {
+    name: 'movie',
+    title: 'RefMovies',
+    icon: 'youtube',
+    position: { x: 500, y: 200 },
+    size: { width: 800, height: 600 }
   }
 };
 

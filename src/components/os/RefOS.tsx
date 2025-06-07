@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { OSProvider, useOS, AppName } from '@/context/OSContext';
 import { OOBEProvider, useOOBE } from '@/context/OOBEContext';
@@ -17,6 +16,7 @@ import Calendar from '../apps/Calendar';
 import Browser from '../apps/Browser';
 import Terminal from '../apps/Terminal';
 import Refy from '../apps/Refy';
+import Movie from '../apps/Movie';
 import OOBE from '../oobe/OOBE';
 import Installer from '../installer/Installer';
 import BootScreen from '../boot/BootScreen';
@@ -55,6 +55,8 @@ const RefOSContent: React.FC = () => {
         return <Terminal />;
       case 'refy':
         return <Refy />;
+      case 'movie':
+        return <Movie />;
       default:
         return <div className="p-4">App not found</div>;
     }

@@ -3,6 +3,7 @@ import React from 'react';
 import { OSProvider, useOS, AppName } from '@/context/OSContext';
 import { OOBEProvider, useOOBE } from '@/context/OOBEContext';
 import { InstallerProvider, useInstaller } from '@/context/InstallerContext';
+import { BootProvider, useBoot } from '@/context/BootContext';
 import Desktop from './Desktop';
 import TaskBar from './TaskBar';
 import StartMenu from './StartMenu';
@@ -18,11 +19,18 @@ import Terminal from '../apps/Terminal';
 import Refy from '../apps/Refy';
 import OOBE from '../oobe/OOBE';
 import Installer from '../installer/Installer';
+import BootScreen from '../boot/BootScreen';
 
 const RefOSContent: React.FC = () => {
   const { apps } = useOS();
   const { isCompleted } = useOOBE();
   const { installComplete } = useInstaller();
+  const { bootComplete, completeBootSequence } = useBoot();
+
+  // Don't render anything until boot is completed
+  if (!bootComplete) {
+    return <BootScreen onBootComplete={completeBootSequence} />;
+  }
 
   // Don't render the OS until both installation and OOBE are completed
   const shouldShowOS = installComplete && isCompleted;
@@ -89,13 +97,15 @@ const RefOSContent: React.FC = () => {
 
 const RefOS: React.FC = () => {
   return (
-    <InstallerProvider>
-      <OOBEProvider>
-        <OSProvider>
-          <RefOSContent />
-        </OSProvider>
-      </OOBEProvider>
-    </InstallerProvider>
+    <BootProvider>
+      <InstallerProvider>
+        <OOBEProvider>
+          <OSProvider>
+            <RefOSContent />
+          </OSProvider>
+        </OOBEProvider>
+      </InstallerProvider>
+    </BootProvider>
   );
 };
 

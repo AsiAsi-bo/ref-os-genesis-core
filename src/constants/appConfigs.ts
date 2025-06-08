@@ -71,5 +71,12 @@ export const defaultAppConfigs: Record<AppName, Omit<App, 'id' | 'isOpen' | 'isM
     icon: 'youtube',
     position: { x: 500, y: 200 },
     size: { width: 800, height: 600 }
+  },
+  game: {
+    name: 'game',
+    title: 'RefGames',
+    icon: 'gamepad',
+    position: { x: 300, y: 100 },
+    size: { width: 900, height: 650 }
   }
 };

@@ -10,16 +10,17 @@ const Movie: React.FC = () => {
         <p className="text-white/70 text-sm">Watch content from Damilola Mike Bamiloye</p>
       </div>
 
-      {/* YouTube Channel Embed */}
+      {/* YouTube Video */}
       <div className="flex-1 p-4">
         <div className="w-full h-full bg-black rounded-lg overflow-hidden">
           <iframe
             width="100%"
             height="100%"
-            src="https://www.youtube.com/embed/videoseries?list=UU_x5XG1OV2P6uZZ5FSM9Ttw"
-            title="Damilola Mike Bamiloye YouTube Channel"
+            src="https://www.youtube.com/embed/OR4yTuEByBs?si=TzyRJ82kBXZWxtUW"
+            title="YouTube video player"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen
             className="w-full h-full"
           />

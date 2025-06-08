@@ -1,6 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useOS, App } from '@/context/OSContext';
+import { useOS } from '@/context/OSContext';
+import { App } from '@/types/app';
 import { X, Minus, Maximize } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

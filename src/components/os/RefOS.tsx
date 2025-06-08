@@ -17,6 +17,7 @@ import Browser from '../apps/Browser';
 import Terminal from '../apps/Terminal';
 import Refy from '../apps/Refy';
 import Movie from '../apps/Movie';
+import Game from '../apps/Game';
 import OOBE from '../oobe/OOBE';
 import Installer from '../installer/Installer';
 import BootScreen from '../boot/BootScreen';
@@ -57,6 +58,8 @@ const RefOSContent: React.FC = () => {
         return <Refy />;
       case 'movie':
         return <Movie />;
+      case 'game':
+        return <Game />;
       default:
         return <div className="p-4">App not found</div>;
     }

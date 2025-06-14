@@ -2,6 +2,11 @@
 import React, { useState } from 'react';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 
 type Event = {
@@ -10,6 +15,7 @@ type Event = {
   date: Date;
   time: string;
   type: 'meeting' | 'reminder' | 'task';
+  description?: string;
 };
 
 const CalendarApp: React.FC = () => {
@@ -38,6 +44,15 @@ const CalendarApp: React.FC = () => {
     }
   ]);
   
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [newEvent, setNewEvent] = useState({
+    title: '',
+    date: '',
+    time: '',
+    type: 'meeting' as Event['type'],
+    description: ''
+  });
+  
   const getDaysInMonth = (year: number, month: number) => {
     return new Date(year, month + 1, 0).getDate();
   };
@@ -52,6 +67,29 @@ const CalendarApp: React.FC = () => {
   
   const nextMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+  };
+
+  const handleAddEvent = () => {
+    if (!newEvent.title || !newEvent.date || !newEvent.time) return;
+    
+    const event: Event = {
+      id: Date.now().toString(),
+      title: newEvent.title,
+      date: new Date(newEvent.date),
+      time: newEvent.time,
+      type: newEvent.type,
+      description: newEvent.description
+    };
+    
+    setEvents([...events, event]);
+    setNewEvent({
+      title: '',
+      date: '',
+      time: '',
+      type: 'meeting',
+      description: ''
+    });
+    setIsDialogOpen(false);
   };
   
   const renderCalendar = () => {
@@ -119,10 +157,91 @@ const CalendarApp: React.FC = () => {
           <CalendarIcon size={24} className="text-refos-primary mr-2" />
           <h3 className="text-xl font-medium">Calendar</h3>
         </div>
-        <Button variant="ghost" size="sm" className="text-white/80 hover:text-white hover:bg-refos-primary/20">
-          <Plus size={18} className="mr-1" />
-          New Event
-        </Button>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button variant="ghost" size="sm" className="text-white/80 hover:text-white hover:bg-refos-primary/20">
+              <Plus size={18} className="mr-1" />
+              New Event
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="bg-refos-window border-refos-primary/20">
+            <DialogHeader>
+              <DialogTitle className="text-white">Add New Event</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="title" className="text-white/80">Title</Label>
+                <Input
+                  id="title"
+                  value={newEvent.title}
+                  onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+                  className="bg-refos-taskbar border-refos-primary/20 text-white"
+                  placeholder="Event title"
+                />
+              </div>
+              <div>
+                <Label htmlFor="date" className="text-white/80">Date</Label>
+                <Input
+                  id="date"
+                  type="date"
+                  value={newEvent.date}
+                  onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
+                  className="bg-refos-taskbar border-refos-primary/20 text-white"
+                />
+              </div>
+              <div>
+                <Label htmlFor="time" className="text-white/80">Time</Label>
+                <Input
+                  id="time"
+                  type="time"
+                  value={newEvent.time}
+                  onChange={(e) => setNewEvent({ ...newEvent, time: e.target.value })}
+                  className="bg-refos-taskbar border-refos-primary/20 text-white"
+                />
+              </div>
+              <div>
+                <Label htmlFor="type" className="text-white/80">Type</Label>
+                <Select value={newEvent.type} onValueChange={(value: Event['type']) => setNewEvent({ ...newEvent, type: value })}>
+                  <SelectTrigger className="bg-refos-taskbar border-refos-primary/20 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-refos-window border-refos-primary/20">
+                    <SelectItem value="meeting" className="text-white hover:bg-refos-primary/20">Meeting</SelectItem>
+                    <SelectItem value="reminder" className="text-white hover:bg-refos-primary/20">Reminder</SelectItem>
+                    <SelectItem value="task" className="text-white hover:bg-refos-primary/20">Task</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="description" className="text-white/80">Description (optional)</Label>
+                <Textarea
+                  id="description"
+                  value={newEvent.description}
+                  onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
+                  className="bg-refos-taskbar border-refos-primary/20 text-white"
+                  placeholder="Event description"
+                  rows={3}
+                />
+              </div>
+              <div className="flex justify-end space-x-2">
+                <Button
+                  variant="ghost"
+                  onClick={() => setIsDialogOpen(false)}
+                  className="text-white/80 hover:text-white hover:bg-refos-primary/20"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleAddEvent}
+                  className="bg-refos-primary hover:bg-refos-primary/80 text-white"
+                  disabled={!newEvent.title || !newEvent.date || !newEvent.time}
+                >
+                  Add Event
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
       
       <div className="flex items-center justify-between mb-4">

@@ -1,95 +1,68 @@
 
 import React from 'react';
-import { useOS, AppName } from '@/context/OSContext';
+import { useOS } from '@/context/OSContext';
 import { Button } from '@/components/ui/button';
-import { Folder, FileText, Calculator, Settings, Monitor, Cloud, Calendar, Globe, Terminal, Bot } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Menu, Clock, Wifi, Battery, Volume2 } from 'lucide-react';
+import VRControls from '../vr/VRControls';
 
 const TaskBar: React.FC = () => {
-  const { apps, startMenuOpen, activeAppId, openApp, focusApp, restoreApp, toggleStartMenu } = useOS();
+  const { apps, toggleStartMenu, focusApp, restoreApp } = useOS();
   
-  const getAppIcon = (iconName: string) => {
-    switch (iconName) {
-      case 'folder': return <Folder size={20} />;
-      case 'file-text': return <FileText size={20} />;
-      case 'calculator': return <Calculator size={20} />;
-      case 'settings': return <Settings size={20} />;
-      case 'cloud': return <Cloud size={20} />;
-      case 'calendar': return <Calendar size={20} />;
-      case 'globe': return <Globe size={20} />;
-      case 'terminal': return <Terminal size={20} />;
-      case 'bot': return <Bot size={20} />;
-      default: return <Monitor size={20} />;
-    }
-  };
+  const visibleApps = apps.filter(app => app.isOpen);
+  const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-  const getCurrentTime = () => {
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
-  };
-
-  const [time, setTime] = React.useState(getCurrentTime());
-
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setTime(getCurrentTime());
-    }, 60000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  const handleAppClick = (appId: string, isMinimized: boolean) => {
-    if (isMinimized) {
-      restoreApp(appId);
+  const handleAppClick = (app: any) => {
+    if (app.isMinimized) {
+      restoreApp(app.id);
     } else {
-      focusApp(appId);
+      focusApp(app.id);
     }
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-12 bg-refos-taskbar flex items-center px-2 shadow-lg z-[9999]">
-      {/* Start button */}
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        className={cn(
-          "h-10 w-10 rounded-full mr-2",
-          startMenuOpen ? "bg-refos-primary text-white" : "hover:bg-white/10 text-white"
-        )}
+    <div className="fixed bottom-0 left-0 right-0 h-12 bg-refos-taskbar border-t border-white/10 flex items-center px-2 z-50">
+      {/* Start Menu Button */}
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={toggleStartMenu}
+        className="text-white hover:bg-white/20 mr-2"
       >
-        <span className="sr-only">Start</span>
-        <Monitor size={24} />
+        <Menu size={20} />
       </Button>
 
-      {/* Divider */}
-      <div className="h-8 w-px bg-white/10 mr-2"></div>
-
-      {/* Running apps */}
+      {/* Running Apps */}
       <div className="flex-1 flex items-center space-x-1 overflow-x-auto">
-        {apps.map(app => (
+        {visibleApps.map(app => (
           <Button
             key={app.id}
             variant="ghost"
             size="sm"
-            className={cn(
-              "h-10 rounded-md px-3 text-white",
-              activeAppId === app.id ? "bg-white/20" : "hover:bg-white/10",
-              app.isMinimized && "opacity-60"
-            )}
-            onClick={() => handleAppClick(app.id, app.isMinimized)}
+            onClick={() => handleAppClick(app)}
+            className={`text-white hover:bg-white/20 min-w-0 max-w-40 ${
+              app.isMinimized ? 'opacity-50' : ''
+            }`}
           >
-            {getAppIcon(app.icon)}
-            <span className="ml-2 max-w-[100px] truncate">{app.title}</span>
+            <span className="truncate">{app.title}</span>
           </Button>
         ))}
       </div>
 
-      {/* System tray */}
-      <div className="flex items-center space-x-3 ml-2 px-3 h-full border-l border-white/10">
-        <div className="text-white/90 text-sm font-medium">{time}</div>
+      {/* System Tray */}
+      <div className="flex items-center space-x-2 text-white">
+        {/* VR Controls */}
+        <VRControls />
+        
+        {/* System Icons */}
+        <Wifi size={16} />
+        <Volume2 size={16} />
+        <Battery size={16} />
+        
+        {/* Clock */}
+        <div className="flex items-center space-x-1">
+          <Clock size={16} />
+          <span className="text-sm">{currentTime}</span>
+        </div>
       </div>
     </div>
   );

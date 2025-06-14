@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,31 +20,12 @@ const Settings: React.FC = () => {
   const [notifications, setNotifications] = useState(true);
   const [privacy, setPrivacy] = useState(true);
   const [display, setDisplay] = useState('auto');
-  const [network, setNetwork] = useState('wifi');
+  const [wifi, setWifi] = useState(true);
   const [language, setLanguage] = useState('en');
   const [timeZone, setTimeZone] = useState('auto');
   const [version] = useState('1.0.0');
   const [volume, setVolume] = useState(50);
-
-  const settingsData = {
-    theme,
-    setTheme,
-    notifications,
-    setNotifications,
-    privacy,
-    setPrivacy,
-    display,
-    setDisplay,
-    network,
-    setNetwork,
-    language,
-    setLanguage, // Fixed the typo here
-    timeZone,
-    setTimeZone,
-    version,
-    volume,
-    setVolume,
-  };
+  const [username, setUsername] = useState('User');
 
   return (
     <div className="h-full flex flex-col bg-refos-window text-white">
@@ -106,7 +88,10 @@ const Settings: React.FC = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <AccountSettings {...settingsData} />
+                <AccountSettings 
+                  username={username}
+                  onUsernameChange={setUsername}
+                />
               </CardContent>
             </Card>
           </TabsContent>
@@ -120,7 +105,12 @@ const Settings: React.FC = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <NotificationSettings {...settingsData} />
+                <NotificationSettings 
+                  notifications={notifications}
+                  volume={volume}
+                  onNotificationsChange={setNotifications}
+                  onVolumeChange={setVolume}
+                />
               </CardContent>
             </Card>
           </TabsContent>
@@ -134,7 +124,10 @@ const Settings: React.FC = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <PrivacySettings {...settingsData} />
+                <PrivacySettings 
+                  privacy={privacy}
+                  onPrivacyChange={setPrivacy}
+                />
               </CardContent>
             </Card>
           </TabsContent>
@@ -149,9 +142,15 @@ const Settings: React.FC = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
-                  <DisplaySettings {...settingsData} />
-                  <NetworkSettings {...settingsData} />
-                  <TimeLanguageSettings {...settingsData} />
+                  <DisplaySettings />
+                  <NetworkSettings 
+                    wifi={wifi}
+                    onWifiChange={setWifi}
+                  />
+                  <TimeLanguageSettings 
+                    language={language}
+                    onLanguageChange={setLanguage}
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -166,7 +165,7 @@ const Settings: React.FC = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <AboutSettings {...settingsData} />
+                <AboutSettings />
                 <div className="mt-6 pt-6 border-t border-white/10">
                   <ResetSettings />
                 </div>

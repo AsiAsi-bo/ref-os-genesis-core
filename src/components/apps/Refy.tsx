@@ -5,8 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
-import { generateAIResponse } from '@/utils/ai';
+import { generateAIResponse, AIProvider } from '@/utils/ai';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 type Message = {
   id: string;
@@ -22,15 +23,17 @@ const RefyAssistant: React.FC = () => {
     {
       id: generateId(),
       sender: 'refy',
-      text: 'Hello! I\'m Refy, your AI-powered virtual assistant. How can I help you today?',
+      text: 'Hello! I\'m Refy, your AI-powered virtual assistant. I now support both OpenAI and Gemini! How can I help you today?',
       timestamp: new Date()
     }
   ]);
   const [input, setInput] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [apiKey, setApiKey] = useState<string | null>(null);
+  const [provider, setProvider] = useState<AIProvider>('openai');
   const [showApiDialog, setShowApiDialog] = useState(false);
   const [tempApiKey, setTempApiKey] = useState('');
+  const [tempProvider, setTempProvider] = useState<AIProvider>('openai');
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   
   // Auto-scroll to bottom when messages change
@@ -45,6 +48,7 @@ const RefyAssistant: React.FC = () => {
 
   const handleApiKeySubmit = () => {
     setApiKey(tempApiKey);
+    setProvider(tempProvider);
     setShowApiDialog(false);
     setTempApiKey('');
   };
@@ -62,7 +66,7 @@ const RefyAssistant: React.FC = () => {
     setInput('');
     
     // Generate AI response
-    const aiResponse = await generateAIResponse(text, apiKey);
+    const aiResponse = await generateAIResponse(text, apiKey, provider);
     
     const refyMessage: Message = {
       id: generateId(),
@@ -101,7 +105,7 @@ const RefyAssistant: React.FC = () => {
           </div>
           <div>
             <h3 className="font-medium text-white">Refy</h3>
-            <p className="text-white/60 text-xs">AI Assistant</p>
+            <p className="text-white/60 text-xs">AI Assistant ({provider === 'openai' ? 'OpenAI' : 'Gemini'})</p>
           </div>
         </div>
         <Button
@@ -169,21 +173,33 @@ const RefyAssistant: React.FC = () => {
       <Dialog open={showApiDialog} onOpenChange={setShowApiDialog}>
         <DialogContent className="sm:max-w-[425px] bg-refos-window text-white">
           <DialogHeader>
-            <DialogTitle>Enter OpenAI API Key</DialogTitle>
+            <DialogTitle>Configure AI Provider</DialogTitle>
             <DialogDescription className="text-white/70">
-              Please enter your OpenAI API key to enable AI responses. We recommend connecting to Supabase for secure key storage.
+              Choose your AI provider and enter your API key. We recommend connecting to Supabase for secure key storage.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-white">AI Provider</label>
+              <Select value={tempProvider} onValueChange={(value: AIProvider) => setTempProvider(value)}>
+                <SelectTrigger className="bg-refos-taskbar border-refos-window/30 text-white">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-refos-taskbar border-refos-window/30">
+                  <SelectItem value="openai" className="text-white">OpenAI (GPT-4)</SelectItem>
+                  <SelectItem value="gemini" className="text-white">Google Gemini</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <Input
               type="password"
               value={tempApiKey}
               onChange={(e) => setTempApiKey(e.target.value)}
-              placeholder="Enter your API key"
+              placeholder={`Enter your ${tempProvider === 'openai' ? 'OpenAI' : 'Gemini'} API key`}
               className="bg-refos-taskbar border-refos-window/30 focus-visible:ring-refos-primary text-white"
             />
             <Button onClick={handleApiKeySubmit} className="bg-refos-primary hover:bg-refos-primary/80">
-              Save API Key
+              Save Configuration
             </Button>
           </div>
         </DialogContent>
@@ -193,4 +209,3 @@ const RefyAssistant: React.FC = () => {
 };
 
 export default RefyAssistant;
-

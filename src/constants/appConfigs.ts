@@ -1,4 +1,3 @@
-
 import { AppName, App } from '@/types/app';
 
 export const defaultAppConfigs: Record<AppName, Omit<App, 'id' | 'isOpen' | 'isMinimized' | 'zIndex'>> = {
@@ -78,5 +77,12 @@ export const defaultAppConfigs: Record<AppName, Omit<App, 'id' | 'isOpen' | 'isM
     icon: 'gamepad',
     position: { x: 300, y: 100 },
     size: { width: 900, height: 650 }
+  },
+  email: {
+    name: 'email',
+    title: 'RefMail',
+    icon: 'mail',
+    position: { x: 150, y: 300 },
+    size: { width: 800, height: 600 }
   }
 };

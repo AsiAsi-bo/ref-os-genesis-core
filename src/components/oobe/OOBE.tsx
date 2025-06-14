@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import WelcomeStep from './steps/WelcomeStep';
 import PersonalizationStep from './steps/PersonalizationStep';
+import PartitionStep from './steps/PartitionStep';
 import PrivacyStep from './steps/PrivacyStep';
 import FinalStep from './steps/FinalStep';
 
@@ -22,8 +23,10 @@ const OOBE: React.FC = () => {
       case 2:
         return <PersonalizationStep />;
       case 3:
-        return <PrivacyStep />;
+        return <PartitionStep />;
       case 4:
+        return <PrivacyStep />;
+      case 5:
         return <FinalStep />;
       default:
         return <WelcomeStep />;
@@ -32,8 +35,8 @@ const OOBE: React.FC = () => {
 
   return (
     <Dialog open={!isCompleted} modal>
-      <DialogContent className="sm:max-w-[600px] p-0 overflow-hidden bg-refos-window border-refos-primary/20 text-white">
-        <div className="flex flex-col h-[500px]">
+      <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden bg-refos-window border-refos-primary/20 text-white">
+        <div className="flex flex-col h-[600px]">
           {/* Header with progress indicator */}
           <div className="bg-refos-window border-b border-white/10 p-4">
             <div className="flex justify-between items-center">

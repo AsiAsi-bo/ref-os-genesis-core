@@ -17,7 +17,7 @@ const OOBEContext = createContext<OOBEContextType | undefined>(undefined);
 export const OOBEProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [currentStep, setCurrentStep] = useState<number>(1);
-  const totalSteps = 4; // Total number of OOBE steps
+  const totalSteps = 5; // Updated to include partition step
   
   // Check if OOBE has been completed before
   useEffect(() => {

@@ -1,94 +1,179 @@
-
 import React, { useState } from 'react';
-import { Monitor, User, Bell, Wifi, Shield, Clock, Info, Palette, RotateCcw } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useSettings } from './hooks/useSettings';
-
-import DisplaySettings from './components/DisplaySettings';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Settings as SettingsIcon, User, Bell, Shield, Monitor, Wifi, Clock, Info, RotateCcw } from 'lucide-react';
+import { useTheme } from '@/context/ThemeContext';
 import PersonalizationSettings from './components/PersonalizationSettings';
 import AccountSettings from './components/AccountSettings';
 import NotificationSettings from './components/NotificationSettings';
-import NetworkSettings from './components/NetworkSettings';
 import PrivacySettings from './components/PrivacySettings';
+import DisplaySettings from './components/DisplaySettings';
+import NetworkSettings from './components/NetworkSettings';
 import TimeLanguageSettings from './components/TimeLanguageSettings';
 import AboutSettings from './components/AboutSettings';
 import ResetSettings from './components/ResetSettings';
 
 const Settings: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('display');
-  const settings = useSettings();
+  const { theme, setTheme } = useTheme();
+  const [notifications, setNotifications] = useState(true);
+  const [privacy, setPrivacy] = useState(true);
+  const [display, setDisplay] = useState('auto');
+  const [network, setNetwork] = useState('wifi');
+  const [language, setLanguage] = useState('en');
+  const [timeZone, setTimeZone] = useState('auto');
+  const [version] = useState('1.0.0');
+  const [volume, setVolume] = useState(50);
 
-  const tabs = [
-    { id: 'display', name: 'Display', icon: <Monitor size={18} /> },
-    { id: 'personalization', name: 'Personalization', icon: <Palette size={18} /> },
-    { id: 'accounts', name: 'Accounts', icon: <User size={18} /> },
-    { id: 'notifications', name: 'Notifications', icon: <Bell size={18} /> },
-    { id: 'network', name: 'Network', icon: <Wifi size={18} /> },
-    { id: 'privacy', name: 'Privacy', icon: <Shield size={18} /> },
-    { id: 'time', name: 'Time & Language', icon: <Clock size={18} /> },
-    { id: 'about', name: 'About', icon: <Info size={18} /> },
-    { id: 'reset', name: 'Reset', icon: <RotateCcw size={18} /> }
-  ];
+  const settingsData = {
+    theme,
+    setTheme,
+    notifications,
+    setNotifications,
+    privacy,
+    setPrivacy,
+    display,
+    setDisplay,
+    network,
+    setNetwork,
+    language,
+    setLanguage, // Fixed the typo here
+    timeZone,
+    setTimeZone,
+    version,
+    volume,
+    setVolume,
+  };
 
   return (
-    <div className="h-full flex bg-refos-window">
-      {/* Sidebar */}
-      <div className="w-64 border-r border-white/10 overflow-y-auto">
-        {tabs.map(tab => (
-          <button
-            key={tab.id}
-            className={cn(
-              "w-full flex items-center text-left px-4 py-3 hover:bg-white/10 transition-colors",
-              activeTab === tab.id && "bg-white/10 border-l-2 border-refos-primary"
-            )}
-            onClick={() => setActiveTab(tab.id)}
-          >
-            <span className="mr-3 text-white/80">{tab.icon}</span>
-            <span className="text-sm font-medium">{tab.name}</span>
-          </button>
-        ))}
+    <div className="h-full flex flex-col bg-refos-window text-white">
+      <div className="p-4 border-b border-white/10">
+        <div className="flex items-center">
+          <SettingsIcon className="mr-2 h-5 w-5" />
+          <h1 className="text-lg font-semibold">Settings</h1>
+        </div>
       </div>
+      
+      <div className="flex-1 p-4 overflow-y-auto">
+        <Tabs defaultValue="personalization" className="w-full">
+          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 mb-6 bg-refos-window/50">
+            <TabsTrigger value="personalization" className="flex flex-col items-center p-2 text-xs">
+              <Monitor size={16} />
+              <span className="mt-1">Display</span>
+            </TabsTrigger>
+            <TabsTrigger value="account" className="flex flex-col items-center p-2 text-xs">
+              <User size={16} />
+              <span className="mt-1">Account</span>
+            </TabsTrigger>
+            <TabsTrigger value="notifications" className="flex flex-col items-center p-2 text-xs">
+              <Bell size={16} />
+              <span className="mt-1">Notifications</span>
+            </TabsTrigger>
+            <TabsTrigger value="privacy" className="flex flex-col items-center p-2 text-xs">
+              <Shield size={16} />
+              <span className="mt-1">Privacy</span>
+            </TabsTrigger>
+            <TabsTrigger value="system" className="flex flex-col items-center p-2 text-xs">
+              <Clock size={16} />
+              <span className="mt-1">System</span>
+            </TabsTrigger>
+            <TabsTrigger value="about" className="flex flex-col items-center p-2 text-xs">
+              <Info size={16} />
+              <span className="mt-1">About</span>
+            </TabsTrigger>
+          </TabsList>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto p-6">
-        <h2 className="text-xl font-semibold mb-6">{tabs.find(t => t.id === activeTab)?.name}</h2>
-        
-        {activeTab === 'display' && <DisplaySettings />}
-        {activeTab === 'personalization' && <PersonalizationSettings />}
-        {activeTab === 'accounts' && (
-          <AccountSettings 
-            username={settings.username}
-            onUsernameChange={settings.setUsername}
-          />
-        )}
-        {activeTab === 'notifications' && (
-          <NotificationSettings 
-            notifications={settings.notifications}
-            volume={settings.volume}
-            onNotificationsChange={settings.setNotifications}
-            onVolumeChange={settings.setVolume}
-          />
-        )}
-        {activeTab === 'network' && (
-          <NetworkSettings 
-            wifi={settings.wifi}
-            onWifiChange={settings.setWifi}
-          />
-        )}
-        {activeTab === 'privacy' && (
-          <PrivacySettings 
-            privacy={settings.privacy}
-            onPrivacyChange={settings.setPrivacy}
-          />
-        )}
-        {activeTab === 'time' && (
-          <TimeLanguageSettings 
-            language={settings.language}
-            onLanguageChange={settings.setLanguageage}
-          />
-        )}
-        {activeTab === 'about' && <AboutSettings />}
-        {activeTab === 'reset' && <ResetSettings />}
+          <TabsContent value="personalization">
+            <Card className="bg-refos-window/30 border-white/10">
+              <CardHeader>
+                <CardTitle className="text-white">Personalization</CardTitle>
+                <CardDescription className="text-white/70">
+                  Customize the look and feel of your desktop
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <PersonalizationSettings />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="account">
+            <Card className="bg-refos-window/30 border-white/10">
+              <CardHeader>
+                <CardTitle className="text-white">Account Settings</CardTitle>
+                <CardDescription className="text-white/70">
+                  Manage your account information and preferences
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AccountSettings {...settingsData} />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="notifications">
+            <Card className="bg-refos-window/30 border-white/10">
+              <CardHeader>
+                <CardTitle className="text-white">Notification Settings</CardTitle>
+                <CardDescription className="text-white/70">
+                  Control how and when you receive notifications
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <NotificationSettings {...settingsData} />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="privacy">
+            <Card className="bg-refos-window/30 border-white/10">
+              <CardHeader>
+                <CardTitle className="text-white">Privacy & Security</CardTitle>
+                <CardDescription className="text-white/70">
+                  Manage your privacy settings and security options
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <PrivacySettings {...settingsData} />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="system">
+            <Card className="bg-refos-window/30 border-white/10">
+              <CardHeader>
+                <CardTitle className="text-white">System Settings</CardTitle>
+                <CardDescription className="text-white/70">
+                  Configure system-wide settings and preferences
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  <DisplaySettings {...settingsData} />
+                  <NetworkSettings {...settingsData} />
+                  <TimeLanguageSettings {...settingsData} />
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="about">
+            <Card className="bg-refos-window/30 border-white/10">
+              <CardHeader>
+                <CardTitle className="text-white">About Ref OS</CardTitle>
+                <CardDescription className="text-white/70">
+                  System information and version details
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AboutSettings {...settingsData} />
+                <div className="mt-6 pt-6 border-t border-white/10">
+                  <ResetSettings />
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

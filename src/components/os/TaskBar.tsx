@@ -3,7 +3,6 @@ import React from 'react';
 import { useOS } from '@/context/OSContext';
 import { Button } from '@/components/ui/button';
 import { Menu, Clock, Wifi, Battery, Volume2 } from 'lucide-react';
-import VRControls from '../vr/VRControls';
 
 const TaskBar: React.FC = () => {
   const { apps, toggleStartMenu, focusApp, restoreApp } = useOS();
@@ -50,9 +49,6 @@ const TaskBar: React.FC = () => {
 
       {/* System Tray */}
       <div className="flex items-center space-x-2 text-white">
-        {/* VR Controls */}
-        <VRControls />
-        
         {/* System Icons */}
         <Wifi size={16} />
         <Volume2 size={16} />

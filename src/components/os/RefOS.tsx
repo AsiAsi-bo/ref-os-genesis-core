@@ -5,12 +5,10 @@ import { OOBEProvider, useOOBE } from '@/context/OOBEContext';
 import { InstallerProvider, useInstaller } from '@/context/InstallerContext';
 import { BootProvider, useBoot } from '@/context/BootContext';
 import { ThemeProvider } from '@/context/ThemeContext';
-import { VRProvider } from '@/context/VRContext';
 import Desktop from './Desktop';
 import TaskBar from './TaskBar';
 import StartMenu from './StartMenu';
 import DraggableWindow from './DraggableWindow';
-import VRInterface from '../vr/VRInterface';
 import FileExplorer from '../apps/FileExplorer';
 import Notepad from '../apps/Notepad';
 import Calculator from '../apps/Calculator';
@@ -75,9 +73,6 @@ const RefOSContent: React.FC = () => {
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-gradient-to-br from-refos-desktop to-refos-desktop/90 select-none">
-      {/* VR Interface */}
-      <VRInterface />
-
       {/* OOBE */}
       <OOBE />
 
@@ -114,9 +109,7 @@ const RefOS: React.FC = () => {
         <InstallerProvider>
           <OOBEProvider>
             <OSProvider>
-              <VRProvider>
-                <RefOSContent />
-              </VRProvider>
+              <RefOSContent />
             </OSProvider>
           </OOBEProvider>
         </InstallerProvider>

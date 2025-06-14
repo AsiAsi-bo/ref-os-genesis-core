@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -35,20 +36,21 @@
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* RefOS Light Theme */
+    --refos-desktop: 240 20% 95%;
+    --refos-taskbar: 240 15% 90%;
+    --refos-window: 0 0% 100%;
+    --refos-primary: 262 83% 58%;
+    --refos-secondary: 316 70% 68%;
+    --refos-accent: 199 89% 48%;
   }
 
   .dark {
@@ -87,6 +89,14 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* RefOS Dark Theme */
+    --refos-desktop: 223 39% 17%;
+    --refos-taskbar: 225 39% 21%;
+    --refos-window: 227 39% 23%;
+    --refos-primary: 262 83% 58%;
+    --refos-secondary: 316 70% 68%;
+    --refos-accent: 199 89% 48%;
   }
 }
 

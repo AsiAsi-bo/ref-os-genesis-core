@@ -3,17 +3,15 @@ import React from 'react';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Sun, Moon } from 'lucide-react';
-import { SettingsState } from '../hooks/useSettings';
+import { useTheme } from '@/context/ThemeContext';
 
-interface PersonalizationSettingsProps {
-  theme: SettingsState['theme'];
-  onThemeChange: (checked: boolean) => void;
-}
+const PersonalizationSettings: React.FC = () => {
+  const { theme, setTheme } = useTheme();
 
-const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
-  theme,
-  onThemeChange,
-}) => {
+  const handleThemeChange = (checked: boolean) => {
+    setTheme(checked ? 'dark' : 'light');
+  };
+
   return (
     <div>
       <div className="mb-6">
@@ -26,7 +24,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
             </div>
             <Switch 
               checked={theme === 'dark'}
-              onCheckedChange={onThemeChange}
+              onCheckedChange={handleThemeChange}
             />
           </div>
         </div>

@@ -54,12 +54,7 @@ const Settings: React.FC = () => {
         <h2 className="text-xl font-semibold mb-6">{tabs.find(t => t.id === activeTab)?.name}</h2>
         
         {activeTab === 'display' && <DisplaySettings />}
-        {activeTab === 'personalization' && (
-          <PersonalizationSettings 
-            theme={settings.theme}
-            onThemeChange={(checked) => settings.setTheme(checked ? 'dark' : 'light')}
-          />
-        )}
+        {activeTab === 'personalization' && <PersonalizationSettings />}
         {activeTab === 'accounts' && (
           <AccountSettings 
             username={settings.username}
@@ -89,7 +84,7 @@ const Settings: React.FC = () => {
         {activeTab === 'time' && (
           <TimeLanguageSettings 
             language={settings.language}
-            onLanguageChange={settings.setLanguage}
+            onLanguageChange={settings.setLanguageage}
           />
         )}
         {activeTab === 'about' && <AboutSettings />}

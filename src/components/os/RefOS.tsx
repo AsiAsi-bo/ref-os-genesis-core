@@ -1,8 +1,10 @@
+
 import React from 'react';
 import { OSProvider, useOS, AppName } from '@/context/OSContext';
 import { OOBEProvider, useOOBE } from '@/context/OOBEContext';
 import { InstallerProvider, useInstaller } from '@/context/InstallerContext';
 import { BootProvider, useBoot } from '@/context/BootContext';
+import { ThemeProvider } from '@/context/ThemeContext';
 import Desktop from './Desktop';
 import TaskBar from './TaskBar';
 import StartMenu from './StartMenu';
@@ -102,15 +104,17 @@ const RefOSContent: React.FC = () => {
 
 const RefOS: React.FC = () => {
   return (
-    <BootProvider>
-      <InstallerProvider>
-        <OOBEProvider>
-          <OSProvider>
-            <RefOSContent />
-          </OSProvider>
-        </OOBEProvider>
-      </InstallerProvider>
-    </BootProvider>
+    <ThemeProvider>
+      <BootProvider>
+        <InstallerProvider>
+          <OOBEProvider>
+            <OSProvider>
+              <RefOSContent />
+            </OSProvider>
+          </OOBEProvider>
+        </InstallerProvider>
+      </BootProvider>
+    </ThemeProvider>
   );
 };
 

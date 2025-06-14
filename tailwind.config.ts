@@ -64,12 +64,12 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				refos: {
-					desktop: '#1A1F2C',
-					taskbar: '#2A2F3C',
-					window: '#3A3F4C',
-					primary: '#8B5CF6',
-					secondary: '#D946EF',
-					accent: '#0EA5E9'
+					desktop: 'hsl(var(--refos-desktop))',
+					taskbar: 'hsl(var(--refos-taskbar))',
+					window: 'hsl(var(--refos-window))',
+					primary: 'hsl(var(--refos-primary))',
+					secondary: 'hsl(var(--refos-secondary))',
+					accent: 'hsl(var(--refos-accent))'
 				}
 			},
 			borderRadius: {

@@ -45,7 +45,7 @@ const WikiWebsite: React.FC = () => {
             <table className="w-full text-sm">
               <tr>
                 <td className="font-semibold text-gray-700 py-1">Developer</td>
-                <td className="py-1">Ref Technologies</td>
+                <td className="py-1">Brin Corporation</td>
               </tr>
               <tr>
                 <td className="font-semibold text-gray-700 py-1">Written in</td>
@@ -57,7 +57,7 @@ const WikiWebsite: React.FC = () => {
               </tr>
               <tr>
                 <td className="font-semibold text-gray-700 py-1">License</td>
-                <td className="py-1">Proprietary</td>
+                <td className="py-1">Ref OS Ultimate</td>
               </tr>
             </table>
           </div>
@@ -72,7 +72,7 @@ const WikiWebsite: React.FC = () => {
             <h2 className="text-2xl font-semibold mt-8 mb-4">History</h2>
             <p>
               RefOS was first conceptualized in early 2024 as part of an initiative to create a more intuitive and responsive 
-              operating system. The development team focused on leveraging web technologies to create a lightweight yet powerful 
+              operating system. The development team at Brin Corporation focused on leveraging web technologies to create a lightweight yet powerful 
               desktop environment.
             </p>
 

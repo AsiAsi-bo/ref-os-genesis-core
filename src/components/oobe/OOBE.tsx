@@ -4,8 +4,8 @@ import { useOOBE } from '@/context/OOBEContext';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import WelcomeStep from './steps/WelcomeStep';
-import PersonalizationStep from './steps/PersonalizationStep';
 import PartitionStep from './steps/PartitionStep';
+import PersonalizationStep from './steps/PersonalizationStep';
 import PrivacyStep from './steps/PrivacyStep';
 import FinalStep from './steps/FinalStep';
 
@@ -21,9 +21,9 @@ const OOBE: React.FC = () => {
       case 1:
         return <WelcomeStep />;
       case 2:
-        return <PersonalizationStep />;
-      case 3:
         return <PartitionStep />;
+      case 3:
+        return <PersonalizationStep />;
       case 4:
         return <PrivacyStep />;
       case 5:

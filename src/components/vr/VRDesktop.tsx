@@ -37,6 +37,7 @@ const VRDesktop: React.FC = () => {
       {/* Environment sphere */}
       <Sphere ref={sphereRef} args={[50, 32, 32]} position={[0, 0, 0]}>
         <meshBasicMaterial
+          attach="material"
           color="#1a1a2e"
           side={THREE.BackSide}
           transparent
@@ -46,7 +47,7 @@ const VRDesktop: React.FC = () => {
 
       {/* Floor */}
       <Plane args={[20, 20]} rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]}>
-        <meshStandardMaterial color="#2a2a3e" transparent opacity={0.7} />
+        <meshStandardMaterial attach="material" color="#2a2a3e" transparent opacity={0.7} />
       </Plane>
 
       {/* App icons */}
@@ -58,6 +59,7 @@ const VRDesktop: React.FC = () => {
             onClick={() => handleAppLaunch(app.name)}
           >
             <meshStandardMaterial
+              attach="material"
               color="#4a5568"
               transparent
               opacity={0.9}

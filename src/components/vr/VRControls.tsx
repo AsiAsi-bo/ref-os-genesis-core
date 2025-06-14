@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useVR } from '@/context/VRContext';
-import { Glasses, GlassesOff } from 'lucide-react';
+import { Glasses } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const VRControls: React.FC = () => {
@@ -45,7 +45,7 @@ const VRControls: React.FC = () => {
       className="text-white hover:bg-white/20"
       title={isVRActive ? "Exit VR" : "Enter VR"}
     >
-      {isVRActive ? <GlassesOff size={16} /> : <Glasses size={16} />}
+      {isVRActive ? <Glasses size={16} /> : <Glasses size={16} />}
     </Button>
   );
 };

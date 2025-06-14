@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { useVR } from '@/context/VRContext';
 import { useOS } from '@/context/OSContext';
 import { Canvas } from '@react-three/fiber';
@@ -8,21 +8,9 @@ import VRDesktop from './VRDesktop';
 import VRWindow from './VRWindow';
 
 const VRInterface: React.FC = () => {
-  const { isVRActive, vrSession } = useVR();
+  const { isVRActive } = useVR();
   const { apps } = useOS();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    if (isVRActive && vrSession && canvasRef.current) {
-      // Set up WebGL context for VR
-      const gl = canvasRef.current.getContext('webgl2');
-      if (gl) {
-        vrSession.updateRenderState({
-          baseLayer: new XRWebGLLayer(vrSession, gl)
-        });
-      }
-    }
-  }, [isVRActive, vrSession]);
 
   if (!isVRActive) {
     return null;

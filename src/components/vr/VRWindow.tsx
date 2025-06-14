@@ -43,6 +43,7 @@ const VRWindow: React.FC<VRWindowProps> = ({ app, position }) => {
         onPointerLeave={() => setIsHovered(false)}
       >
         <meshStandardMaterial
+          attach="material"
           color="#2d3748"
           transparent
           opacity={0.95}
@@ -51,7 +52,7 @@ const VRWindow: React.FC<VRWindowProps> = ({ app, position }) => {
 
       {/* Title bar */}
       <Plane args={[2.4, 0.2]} position={[0, 0.8, 0.01]}>
-        <meshStandardMaterial color="#4a5568" />
+        <meshStandardMaterial attach="material" color="#4a5568" />
       </Plane>
 
       {/* Title text */}
@@ -71,7 +72,7 @@ const VRWindow: React.FC<VRWindowProps> = ({ app, position }) => {
         position={[1.05, 0.8, 0.02]}
         onClick={handleCloseClick}
       >
-        <meshStandardMaterial color="#e53e3e" />
+        <meshStandardMaterial attach="material" color="#e53e3e" />
       </Plane>
 
       {/* Close button X */}
@@ -87,7 +88,7 @@ const VRWindow: React.FC<VRWindowProps> = ({ app, position }) => {
 
       {/* Window content area */}
       <Plane args={[2.2, 1.4]} position={[0, -0.1, 0.01]}>
-        <meshStandardMaterial color="#1a202c" />
+        <meshStandardMaterial attach="material" color="#1a202c" />
       </Plane>
 
       {/* Content placeholder */}

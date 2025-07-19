@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useOS } from '@/context/OSContext';
 import { App } from '@/types/app';
-import { X, Minus, Maximize, Minimize } from 'lucide-react';
+import { X, Minus, Maximize, Minimize, Expand } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface DraggableWindowProps {
@@ -72,6 +72,10 @@ const DraggableWindow: React.FC<DraggableWindowProps> = ({ app, children }) => {
   // Handle fullscreen toggle
   const handleFullscreenToggle = () => {
     if (isFullscreen) {
+      // Exit browser fullscreen if active
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      }
       // Restore to previous state
       if (previousState) {
         moveApp(app.id, previousState.position);
@@ -90,6 +94,39 @@ const DraggableWindow: React.FC<DraggableWindowProps> = ({ app, children }) => {
       setIsFullscreen(true);
     }
   };
+
+  // Handle browser fullscreen for games
+  const handleBrowserFullscreen = async () => {
+    if (!windowRef.current) return;
+    
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      } else {
+        await windowRef.current.requestFullscreen();
+      }
+    } catch (error) {
+      console.warn('Fullscreen not supported:', error);
+    }
+  };
+
+  // Listen for fullscreen changes
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement && isFullscreen) {
+        // Browser exited fullscreen, update our state
+        if (previousState) {
+          moveApp(app.id, previousState.position);
+          resizeApp(app.id, previousState.size);
+        }
+        setIsFullscreen(false);
+        setPreviousState(null);
+      }
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, [isFullscreen, previousState, app.id, moveApp, resizeApp]);
 
   // Handle mouse move (for both dragging and resizing)
   useEffect(() => {
@@ -180,6 +217,15 @@ const DraggableWindow: React.FC<DraggableWindowProps> = ({ app, children }) => {
           >
             {isFullscreen ? <Minimize size={14} /> : <Maximize size={14} />}
           </button>
+          {app.name === 'game' && (
+            <button 
+              className="p-1 rounded-sm hover:bg-white/20"
+              onClick={handleBrowserFullscreen}
+              title="Browser Fullscreen"
+            >
+              <Expand size={14} />
+            </button>
+          )}
           <button 
             className="p-1 rounded-sm hover:bg-white/20"
             onClick={() => closeApp(app.id)}

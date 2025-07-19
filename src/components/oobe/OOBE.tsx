@@ -59,22 +59,24 @@ const OOBE: React.FC = () => {
           </div>
           
           {/* Footer with buttons */}
-          <div className="p-4 border-t border-white/10 flex justify-between items-center bg-refos-window/80">
-            <Button
-              variant="outline"
-              onClick={previousStep}
-              disabled={currentStep === 1}
-              className="text-white border-white/20 hover:bg-white/10 hover:text-white"
-            >
-              Back
-            </Button>
-            <div className="text-sm text-white/70">
-              {currentStep === totalSteps ? 'Let\'s get started!' : 'Please complete setup to continue'}
+          {currentStep !== 1 && (
+            <div className="p-4 border-t border-white/10 flex justify-between items-center bg-refos-window/80">
+              <Button
+                variant="outline"
+                onClick={previousStep}
+                disabled={currentStep === 1}
+                className="text-white border-white/20 hover:bg-white/10 hover:text-white"
+              >
+                Back
+              </Button>
+              <div className="text-sm text-white/70">
+                {currentStep === totalSteps ? 'Let\'s get started!' : 'Please complete setup to continue'}
+              </div>
+              <Button onClick={nextStep} className="bg-refos-primary hover:bg-refos-primary/80">
+                {currentStep === totalSteps ? 'Finish' : 'Next'}
+              </Button>
             </div>
-            <Button onClick={nextStep} className="bg-refos-primary hover:bg-refos-primary/80">
-              {currentStep === totalSteps ? 'Finish' : 'Next'}
-            </Button>
-          </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

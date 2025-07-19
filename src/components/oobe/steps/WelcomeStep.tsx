@@ -1,8 +1,16 @@
 
 import React from 'react';
 import { Bot } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useOOBE } from '@/context/OOBEContext';
 
 const WelcomeStep: React.FC = () => {
+  const { goToStep } = useOOBE();
+
+  const handleInstallRefOS = () => {
+    goToStep(2); // Go directly to PartitionStep
+  };
+
   return (
     <div className="space-y-4">
       <h3 className="text-xl font-medium text-refos-primary">Welcome to Ref OS</h3>
@@ -41,9 +49,17 @@ const WelcomeStep: React.FC = () => {
           </p>
         </div>
       </div>
-      <p className="text-white/80 pt-2">
-        Click "Next" to continue with the setup process.
-      </p>
+      <div className="flex flex-col gap-3 pt-4">
+        <Button 
+          onClick={handleInstallRefOS}
+          className="bg-refos-primary hover:bg-refos-primary/80 text-white font-medium py-3"
+        >
+          Install Ref OS
+        </Button>
+        <p className="text-white/60 text-sm text-center">
+          This will start the installation process and guide you through partition selection.
+        </p>
+      </div>
     </div>
   );
 };

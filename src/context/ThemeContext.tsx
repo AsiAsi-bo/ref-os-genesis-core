@@ -7,12 +7,15 @@ interface ThemeContextType {
   theme: Theme;
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
+  consoleMode: boolean;
+  toggleConsoleMode: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setThemeState] = useState<Theme>('dark');
+  const [consoleMode, setConsoleMode] = useState<boolean>(false);
 
   useEffect(() => {
     // Apply theme to document
@@ -21,7 +24,14 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     } else {
       document.documentElement.classList.remove('dark');
     }
-  }, [theme]);
+    
+    // Apply console mode to document
+    if (consoleMode) {
+      document.documentElement.classList.add('console-mode');
+    } else {
+      document.documentElement.classList.remove('console-mode');
+    }
+  }, [theme, consoleMode]);
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
@@ -31,8 +41,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
 
+  const toggleConsoleMode = () => {
+    setConsoleMode(!consoleMode);
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme, consoleMode, toggleConsoleMode }}>
       {children}
     </ThemeContext.Provider>
   );

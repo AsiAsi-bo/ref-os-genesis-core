@@ -1,11 +1,13 @@
 
 import React from 'react';
 import { useOS } from '@/context/OSContext';
+import { useTheme } from '@/context/ThemeContext';
 import { Button } from '@/components/ui/button';
-import { Menu, Clock, Wifi, Battery, Volume2 } from 'lucide-react';
+import { Menu, Clock, Wifi, Battery, Volume2, Terminal } from 'lucide-react';
 
 const TaskBar: React.FC = () => {
   const { apps, toggleStartMenu, focusApp, restoreApp } = useOS();
+  const { consoleMode, toggleConsoleMode } = useTheme();
   
   const visibleApps = apps.filter(app => app.isOpen);
   const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -49,6 +51,17 @@ const TaskBar: React.FC = () => {
 
       {/* System Tray */}
       <div className="flex items-center space-x-2 text-white">
+        {/* Console Mode Toggle */}
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={toggleConsoleMode}
+          className={`p-1 hover:bg-white/20 ${consoleMode ? 'text-green-400' : 'text-white'}`}
+          title="Toggle Console Mode"
+        >
+          <Terminal size={16} />
+        </Button>
+        
         {/* System Icons */}
         <Wifi size={16} />
         <Volume2 size={16} />

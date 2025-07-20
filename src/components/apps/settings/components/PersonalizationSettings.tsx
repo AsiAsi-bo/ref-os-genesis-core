@@ -2,11 +2,11 @@
 import React from 'react';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon, Terminal } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 
 const PersonalizationSettings: React.FC = () => {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, consoleMode, toggleConsoleMode } = useTheme();
 
   const handleThemeChange = (checked: boolean) => {
     setTheme(checked ? 'dark' : 'light');
@@ -25,6 +25,16 @@ const PersonalizationSettings: React.FC = () => {
             <Switch 
               checked={theme === 'dark'}
               onCheckedChange={handleThemeChange}
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <Terminal size={18} className="mr-2" />
+              <span>Console Mode (PS4 Style)</span>
+            </div>
+            <Switch 
+              checked={consoleMode}
+              onCheckedChange={toggleConsoleMode}
             />
           </div>
         </div>

@@ -99,33 +99,33 @@
     --refos-accent: 199 89% 48%;
   }
 
-  /* Console Mode Theme */
+  /* Console Mode Theme - PS4 Style */
   .console-mode {
-    --background: 0 0% 0%;
-    --foreground: 120 100% 50%;
-    --card: 0 0% 5%;
-    --card-foreground: 120 100% 50%;
-    --popover: 0 0% 5%;
-    --popover-foreground: 120 100% 50%;
-    --primary: 120 100% 50%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 120 100% 50%;
-    --muted: 0 0% 10%;
-    --muted-foreground: 120 50% 50%;
-    --accent: 0 0% 10%;
-    --accent-foreground: 120 100% 50%;
-    --destructive: 0 100% 50%;
-    --destructive-foreground: 0 0% 0%;
-    --border: 120 30% 20%;
-    --input: 0 0% 10%;
-    --ring: 120 100% 50%;
-    --refos-desktop: 0 0% 0%;
-    --refos-taskbar: 0 0% 5%;
-    --refos-window: 0 0% 5%;
-    --refos-primary: 120 100% 50%;
-    --refos-secondary: 60 100% 50%;
-    --refos-accent: 180 100% 50%;
+    --background: 220 25% 8%;
+    --foreground: 0 0% 95%;
+    --card: 220 30% 12%;
+    --card-foreground: 0 0% 95%;
+    --popover: 220 30% 12%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 214 100% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 20% 18%;
+    --secondary-foreground: 0 0% 90%;
+    --muted: 220 20% 15%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 214 100% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 15% 25%;
+    --input: 220 20% 15%;
+    --ring: 214 100% 55%;
+    --refos-desktop: 220 25% 8%;
+    --refos-taskbar: 220 30% 10%;
+    --refos-window: 220 30% 12%;
+    --refos-primary: 214 100% 55%;
+    --refos-secondary: 195 100% 50%;
+    --refos-accent: 214 100% 55%;
   }
 }
 
@@ -139,10 +139,17 @@
   }
 
   .console-mode * {
-    font-family: 'Courier New', 'Menlo', 'Monaco', monospace !important;
+    font-family: 'Segoe UI', 'Roboto', 'Inter', sans-serif !important;
+    font-weight: 400;
   }
 
   .console-mode .window-content {
-    background: linear-gradient(180deg, rgba(0,255,0,0.02) 0%, rgba(0,255,0,0.01) 100%);
+    background: linear-gradient(135deg, hsl(220 30% 12%) 0%, hsl(220 25% 10%) 100%);
+    box-shadow: 0 8px 32px rgba(33, 150, 243, 0.1);
+  }
+
+  .console-mode h1, .console-mode h2, .console-mode h3 {
+    font-weight: 300;
+    letter-spacing: 0.5px;
   }
 }

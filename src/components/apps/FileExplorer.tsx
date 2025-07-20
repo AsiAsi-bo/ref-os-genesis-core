@@ -1,134 +1,171 @@
 
-import React, { useState } from 'react';
-import { Folder, FileText, Image, File, ChevronRight, ChevronDown } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Folder, FileText, Image, File, ChevronRight, ChevronDown, Trash2, Edit2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-interface FileItem {
-  id: string;
-  name: string;
-  type: 'file' | 'folder' | 'image' | 'text';
-  children?: FileItem[];
-  size?: string;
-  modified?: string;
-}
+import { fileSystem, FileData } from '@/utils/fileSystem';
+import { useOS } from '@/context/OSContext';
 
 const FileExplorer: React.FC = () => {
-  const [expandedFolders, setExpandedFolders] = useState<Record<string, boolean>>({
-    'documents': true
-  });
+  const { openApp } = useOS();
+  const [files, setFiles] = useState<FileData[]>([]);
+  const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [renameId, setRenameId] = useState<string | null>(null);
+  const [renameName, setRenameName] = useState('');
 
-  const fileSystem: FileItem[] = [
-    {
-      id: 'documents',
-      name: 'Documents',
-      type: 'folder',
-      children: [
-        { id: 'doc1', name: 'Welcome.txt', type: 'text', size: '2 KB', modified: '1 hour ago' },
-        { id: 'doc2', name: 'Report.txt', type: 'text', size: '15 KB', modified: '2 days ago' },
-        {
-          id: 'project',
-          name: 'Project',
-          type: 'folder',
-          children: [
-            { id: 'notes', name: 'Notes.txt', type: 'text', size: '4 KB', modified: '3 days ago' },
-            { id: 'plan', name: 'Plan.txt', type: 'text', size: '8 KB', modified: '5 days ago' }
-          ]
-        }
-      ]
-    },
-    {
-      id: 'pictures',
-      name: 'Pictures',
-      type: 'folder',
-      children: [
-        { id: 'pic1', name: 'Vacation.jpg', type: 'image', size: '2.4 MB', modified: '2 weeks ago' },
-        { id: 'pic2', name: 'Profile.jpg', type: 'image', size: '1.2 MB', modified: '1 month ago' }
-      ]
-    },
-    {
-      id: 'downloads',
-      name: 'Downloads',
-      type: 'folder',
-      children: [
-        { id: 'dl1', name: 'Setup.exe', type: 'file', size: '15.7 MB', modified: '2 days ago' },
-        { id: 'dl2', name: 'Manual.pdf', type: 'file', size: '3.2 MB', modified: '3 days ago' }
-      ]
-    }
-  ];
-
-  const toggleFolder = (id: string) => {
-    setExpandedFolders(prev => ({
-      ...prev,
-      [id]: !prev[id]
-    }));
-  };
+  // Load files on mount and set up refresh interval
+  useEffect(() => {
+    const loadFiles = () => {
+      setFiles(fileSystem.getAllFiles());
+    };
+    
+    loadFiles();
+    
+    // Refresh files every second to catch changes from other apps
+    const interval = setInterval(loadFiles, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const getFileIcon = (type: string) => {
     switch (type) {
-      case 'folder': return <Folder size={18} className="text-yellow-400" />;
       case 'text': return <FileText size={18} className="text-blue-400" />;
       case 'image': return <Image size={18} className="text-green-400" />;
       default: return <File size={18} className="text-gray-400" />;
     }
   };
 
-  const renderFileItem = (item: FileItem, depth = 0) => {
-    const isExpanded = expandedFolders[item.id];
-    const hasChildren = item.children && item.children.length > 0;
-    
-    return (
-      <div key={item.id}>
-        <div 
-          className={cn(
-            "flex items-center px-2 py-1 hover:bg-white/10 cursor-pointer",
-            depth > 0 && `pl-${depth * 4 + 2}`
-          )}
-          style={{ paddingLeft: depth * 16 + 8 }}
-          onClick={() => item.type === 'folder' && toggleFolder(item.id)}
-        >
-          {item.type === 'folder' && hasChildren ? (
-            isExpanded ? <ChevronDown size={16} className="mr-1" /> : <ChevronRight size={16} className="mr-1" />
-          ) : (
-            <span className="w-4 mr-1"></span>
-          )}
-          {getFileIcon(item.type)}
-          <span className="ml-2 text-sm truncate">{item.name}</span>
-        </div>
-        
-        {isExpanded && hasChildren && (
-          <div>
-            {item.children!.map(child => renderFileItem(child, depth + 1))}
-          </div>
-        )}
-      </div>
-    );
+  const handleFileOpen = (file: FileData) => {
+    if (file.type === 'text') {
+      // Open file in Notepad
+      openApp('notepad');
+      // Store the file to be opened in sessionStorage for Notepad to pick up
+      sessionStorage.setItem('openFile', JSON.stringify(file));
+    }
+  };
+
+  const handleFileDelete = (fileId: string) => {
+    if (confirm('Are you sure you want to delete this file?')) {
+      fileSystem.deleteFile(fileId);
+      setFiles(fileSystem.getAllFiles());
+    }
+  };
+
+  const handleRename = (fileId: string, currentName: string) => {
+    setRenameId(fileId);
+    setRenameName(currentName);
+  };
+
+  const confirmRename = (fileId: string) => {
+    if (renameName.trim()) {
+      fileSystem.renameFile(fileId, renameName.trim());
+      setFiles(fileSystem.getAllFiles());
+    }
+    setRenameId(null);
+    setRenameName('');
+  };
+
+  const cancelRename = () => {
+    setRenameId(null);
+    setRenameName('');
   };
 
   return (
     <div className="h-full flex">
       {/* Sidebar */}
-      <div className="w-1/4 min-w-[150px] border-r border-white/10 overflow-y-auto">
+      <div className="w-1/4 min-w-[200px] border-r border-white/10 overflow-y-auto">
         <div className="p-2">
-          <div className="font-medium text-white/80 px-2 py-1 text-sm">Quick Access</div>
+          <div className="font-medium text-white/80 px-2 py-1 text-sm">My Files</div>
           <div className="mt-1">
-            {fileSystem.map(item => renderFileItem(item))}
+            <div className="flex items-center px-2 py-1 text-sm text-white/70">
+              <Folder size={16} className="mr-2 text-yellow-400" />
+              Documents ({files.length} files)
+            </div>
           </div>
         </div>
       </div>
 
       {/* Content area */}
       <div className="flex-1 overflow-y-auto p-4">
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-4">
-          {expandedFolders['documents'] && fileSystem[0].children?.map(item => (
-            <div 
-              key={item.id}
-              className="flex flex-col items-center p-2 rounded-md hover:bg-white/10 cursor-pointer"
-            >
-              {getFileIcon(item.type)}
-              <span className="mt-1 text-xs text-center truncate w-full">{item.name}</span>
-            </div>
-          ))}
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold text-white/90">Documents</h2>
+          <p className="text-sm text-white/60">{files.length} items</p>
         </div>
+        
+        {files.length === 0 ? (
+          <div className="text-center text-white/50 mt-8">
+            <FileText size={48} className="mx-auto mb-4" />
+            <p>No files found</p>
+            <p className="text-xs mt-2">Create files using Notepad to see them here</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-4">
+            {files.map(file => (
+              <div 
+                key={file.id}
+                className={cn(
+                  "flex flex-col p-3 rounded-md border border-white/10 cursor-pointer transition-colors group",
+                  selectedFile === file.id ? "bg-white/20" : "hover:bg-white/10"
+                )}
+                onClick={() => setSelectedFile(file.id)}
+                onDoubleClick={() => handleFileOpen(file)}
+              >
+                <div className="flex justify-between items-start mb-2">
+                  {getFileIcon(file.type)}
+                  <div className="opacity-0 group-hover:opacity-100 flex gap-1">
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRename(file.id, file.name);
+                      }}
+                      className="p-1 rounded hover:bg-white/20"
+                      title="Rename"
+                    >
+                      <Edit2 size={12} />
+                    </button>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleFileDelete(file.id);
+                      }}
+                      className="p-1 rounded hover:bg-white/20 text-red-400"
+                      title="Delete"
+                    >
+                      <Trash2 size={12} />
+                    </button>
+                  </div>
+                </div>
+                
+                {renameId === file.id ? (
+                  <input
+                    type="text"
+                    value={renameName}
+                    onChange={(e) => setRenameName(e.target.value)}
+                    onBlur={() => confirmRename(file.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') confirmRename(file.id);
+                      if (e.key === 'Escape') cancelRename();
+                    }}
+                    className="bg-white/10 text-white text-xs px-1 py-0.5 rounded"
+                    autoFocus
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                ) : (
+                  <span className="text-xs text-center truncate w-full mb-1">{file.name}</span>
+                )}
+                
+                <div className="text-xs text-white/50 text-center">
+                  <div>{file.size}</div>
+                  <div>{file.modified}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        
+        {files.length > 0 && (
+          <div className="mt-6 text-xs text-white/50">
+            Double-click to open files • Right-click or hover for more options
+          </div>
+        )}
       </div>
     </div>
   );

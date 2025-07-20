@@ -25,6 +25,20 @@ const Notepad: React.FC = () => {
     }
   }, [text, currentFile]);
 
+  // Check for file to open from File Explorer
+  useEffect(() => {
+    const openFileData = sessionStorage.getItem('openFile');
+    if (openFileData) {
+      try {
+        const fileToOpen = JSON.parse(openFileData);
+        handleOpenFile(fileToOpen);
+        sessionStorage.removeItem('openFile');
+      } catch (error) {
+        console.error('Error opening file from File Explorer:', error);
+      }
+    }
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
   };

@@ -19,9 +19,9 @@ const OOBE: React.FC = () => {
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
-        return <WelcomeStep />;
-      case 2:
         return <PartitionStep />;
+      case 2:
+        return <WelcomeStep />;
       case 3:
         return <PersonalizationStep />;
       case 4:
@@ -29,7 +29,7 @@ const OOBE: React.FC = () => {
       case 5:
         return <FinalStep />;
       default:
-        return <WelcomeStep />;
+        return <PartitionStep />;
     }
   };
 

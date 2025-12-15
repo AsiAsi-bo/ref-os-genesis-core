@@ -1,8 +1,9 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useOOBE } from '@/context/OOBEContext';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import WelcomeStep from './steps/WelcomeStep';
 import PartitionStep from './steps/PartitionStep';
 import PersonalizationStep from './steps/PersonalizationStep';
@@ -11,9 +12,59 @@ import FinalStep from './steps/FinalStep';
 
 const OOBE: React.FC = () => {
   const { isCompleted, currentStep, totalSteps, nextStep, previousStep } = useOOBE();
+  const [hasCrashed, setHasCrashed] = useState(false);
 
   if (isCompleted) {
     return null;
+  }
+
+  const handleOpenChange = (open: boolean) => {
+    if (!open && !isCompleted) {
+      // User tried to close the setup - trigger crash
+      setHasCrashed(true);
+    }
+  };
+
+  // BSOD-style crash screen
+  if (hasCrashed) {
+    return (
+      <div className="fixed inset-0 bg-[#0078d7] z-[9999] flex flex-col items-center justify-center text-white font-mono p-8 animate-in fade-in duration-300">
+        <div className="max-w-2xl">
+          <div className="text-8xl mb-8">:(</div>
+          <h1 className="text-2xl mb-4">Your PC ran into a problem and needs to restart.</h1>
+          <p className="text-lg mb-8">
+            We're just collecting some error info, and then we'll restart for you.
+          </p>
+          <div className="mb-8">
+            <p className="text-sm mb-2">0% complete</p>
+            <div className="w-64 h-1 bg-white/30 rounded">
+              <div className="h-full bg-white rounded animate-pulse" style={{ width: '0%' }}></div>
+            </div>
+          </div>
+          <div className="text-sm space-y-2">
+            <p>Stop code: SETUP_WIZARD_TERMINATED</p>
+            <p className="text-white/70">
+              If you'd like to know more, you can search online later for this error: OOBE_CRITICAL_FAILURE
+            </p>
+          </div>
+          <div className="mt-12 flex items-center gap-4">
+            <div className="w-24 h-24 border-4 border-white flex items-center justify-center">
+              <span className="text-4xl">QR</span>
+            </div>
+            <div className="text-xs text-white/70">
+              <p>For more information about this issue and possible fixes,</p>
+              <p>visit https://refos.error/OOBE_FAILURE</p>
+            </div>
+          </div>
+          <Button 
+            onClick={() => window.location.reload()} 
+            className="mt-8 bg-white/20 hover:bg-white/30 text-white"
+          >
+            Restart System
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   const renderStepContent = () => {
@@ -34,8 +85,11 @@ const OOBE: React.FC = () => {
   };
 
   return (
-    <Dialog open={!isCompleted} modal>
+    <Dialog open={!isCompleted} onOpenChange={handleOpenChange} modal>
       <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden bg-refos-window border-refos-primary/20 text-white">
+        <VisuallyHidden>
+          <DialogTitle>Ref OS Setup</DialogTitle>
+        </VisuallyHidden>
         <div className="flex flex-col h-[600px]">
           {/* Header with progress indicator */}
           <div className="bg-refos-window border-b border-white/10 p-4">

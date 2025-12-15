@@ -8,7 +8,7 @@ const WelcomeStep: React.FC = () => {
   const { goToStep } = useOOBE();
 
   const handleInstallRefOS = () => {
-    goToStep(2); // Go directly to PartitionStep
+    goToStep(3); // Go to PersonalizationStep after installation
   };
 
   return (

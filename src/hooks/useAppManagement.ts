@@ -10,31 +10,24 @@ export const useAppManagement = () => {
   const [maxZIndex, setMaxZIndex] = useState(0);
 
   const openApp = (appName: AppName) => {
-    // Check if app is already open
-    const existingAppIndex = apps.findIndex(app => app.name === appName && !app.isMinimized);
-    if (existingAppIndex >= 0) {
-      // Just focus it
-      focusApp(apps[existingAppIndex].id);
-      return;
-    }
+    // Multi-tasking: Always create a new instance with offset position
 
-    // Check if the app is minimized
-    const minimizedAppIndex = apps.findIndex(app => app.name === appName && app.isMinimized);
-    if (minimizedAppIndex >= 0) {
-      // Restore it
-      restoreApp(apps[minimizedAppIndex].id);
-      return;
-    }
-
-    // Create a new app instance
+    // Create a new app instance with offset position for multi-tasking
     const newZIndex = maxZIndex + 1;
     const appConfig = defaultAppConfigs[appName];
+    const existingCount = apps.filter(app => app.name === appName).length;
+    const offset = existingCount * 30; // Offset each new instance
+    
     const newApp: App = {
       ...appConfig,
       id: generateId(),
       isOpen: true,
       isMinimized: false,
-      zIndex: newZIndex
+      zIndex: newZIndex,
+      position: {
+        x: appConfig.position.x + offset,
+        y: appConfig.position.y + offset
+      }
     };
 
     setApps([...apps, newApp]);

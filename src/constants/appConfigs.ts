@@ -84,5 +84,12 @@ export const defaultAppConfigs: Record<AppName, Omit<App, 'id' | 'isOpen' | 'isM
     icon: 'mail',
     position: { x: 150, y: 300 },
     size: { width: 800, height: 600 }
+  },
+  store: {
+    name: 'store',
+    title: 'Ref Store',
+    icon: 'store',
+    position: { x: 200, y: 100 },
+    size: { width: 850, height: 600 }
   }
 };

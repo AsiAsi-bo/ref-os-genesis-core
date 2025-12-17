@@ -21,6 +21,7 @@ import Movie from '../apps/Movie';
 import Game from '../apps/Game';
 import Email from '../apps/Email';
 import Store from '../apps/Store';
+import TaskManager from '../apps/TaskManager';
 import OOBE from '../oobe/OOBE';
 import Installer from '../installer/Installer';
 import BootScreen from '../boot/BootScreen';
@@ -67,6 +68,8 @@ const RefOSContent: React.FC = () => {
         return <Email />;
       case 'store':
         return <Store />;
+      case 'taskmanager':
+        return <TaskManager />;
       default:
         return <div className="p-4">App not found</div>;
     }

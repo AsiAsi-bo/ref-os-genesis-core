@@ -12,7 +12,8 @@ import {
   Globe,
   Terminal,
   Bot,
-  Store
+  Store,
+  Activity
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -87,6 +88,12 @@ const StartMenu: React.FC = () => {
       title: 'Ref Store', 
       icon: <Store size={24} className="text-cyan-400" />,
       description: 'Download ready-made software'
+    },
+    { 
+      name: 'taskmanager', 
+      title: 'Task Manager', 
+      icon: <Activity size={24} className="text-orange-400" />,
+      description: 'Monitor running processes'
     },
     { 
       name: 'settings', 

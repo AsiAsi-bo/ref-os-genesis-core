@@ -91,5 +91,12 @@ export const defaultAppConfigs: Record<AppName, Omit<App, 'id' | 'isOpen' | 'isM
     icon: 'store',
     position: { x: 200, y: 100 },
     size: { width: 850, height: 600 }
+  },
+  taskmanager: {
+    name: 'taskmanager',
+    title: 'Task Manager',
+    icon: 'activity',
+    position: { x: 250, y: 150 },
+    size: { width: 500, height: 450 }
   }
 };

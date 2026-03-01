@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import WelcomeStep from './steps/WelcomeStep';
-import PartitionStep from './steps/PartitionStep';
 import PersonalizationStep from './steps/PersonalizationStep';
 import PrivacyStep from './steps/PrivacyStep';
 import FinalStep from './steps/FinalStep';
@@ -70,17 +69,15 @@ const OOBE: React.FC = () => {
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
-        return <PartitionStep />;
-      case 2:
         return <WelcomeStep />;
-      case 3:
+      case 2:
         return <PersonalizationStep />;
-      case 4:
+      case 3:
         return <PrivacyStep />;
-      case 5:
+      case 4:
         return <FinalStep />;
       default:
-        return <PartitionStep />;
+        return <WelcomeStep />;
     }
   };
 

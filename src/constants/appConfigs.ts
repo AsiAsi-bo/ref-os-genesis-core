@@ -98,5 +98,12 @@ export const defaultAppConfigs: Record<AppName, Omit<App, 'id' | 'isOpen' | 'isM
     icon: 'activity',
     position: { x: 250, y: 150 },
     size: { width: 500, height: 450 }
+  },
+  updatecenter: {
+    name: 'updatecenter',
+    title: 'Update Center',
+    icon: 'download',
+    position: { x: 200, y: 100 },
+    size: { width: 600, height: 500 }
   }
 };

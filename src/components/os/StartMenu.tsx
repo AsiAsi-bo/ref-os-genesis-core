@@ -13,7 +13,8 @@ import {
   Terminal,
   Bot,
   Store,
-  Activity
+  Activity,
+  Download
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -94,6 +95,12 @@ const StartMenu: React.FC = () => {
       title: 'Task Manager', 
       icon: <Activity size={24} className="text-orange-400" />,
       description: 'Monitor running processes'
+    },
+    { 
+      name: 'updatecenter', 
+      title: 'Update Center', 
+      icon: <Download size={24} className="text-cyan-400" />,
+      description: 'Check for system updates'
     },
     { 
       name: 'settings', 

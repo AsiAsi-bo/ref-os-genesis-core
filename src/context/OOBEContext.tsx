@@ -17,7 +17,7 @@ const OOBEContext = createContext<OOBEContextType | undefined>(undefined);
 export const OOBEProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [currentStep, setCurrentStep] = useState<number>(1);
-  const totalSteps = 5; // Keeping 5 steps total but reordering them
+  const totalSteps = 4;
   
   // Check if OOBE has been completed before
   useEffect(() => {

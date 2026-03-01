@@ -5,7 +5,41 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ArrowRight, Check, Download, HardDrive, Folder, FileCode, Settings, Shield, Monitor } from 'lucide-react';
+import { ArrowRight, Check, Download, HardDrive, Folder, FileCode, Settings, Shield, Monitor, ChevronRight } from 'lucide-react';
+
+interface OSEdition {
+  id: string;
+  name: string;
+  description: string;
+  size: string;
+  features: string[];
+  recommended?: boolean;
+}
+
+const osEditions: OSEdition[] = [
+  {
+    id: 'ultimate',
+    name: 'Ref OS Ultimate',
+    description: 'Full-featured edition with all apps and premium features.',
+    size: '4.5 GB',
+    features: ['All built-in apps', 'Refy AI Assistant', 'RefGames + Game Builder', 'Ref Store', 'Full theme support'],
+    recommended: true
+  },
+  {
+    id: 'home',
+    name: 'Ref OS Home',
+    description: 'Essential apps for everyday use.',
+    size: '2.8 GB',
+    features: ['Core apps (Browser, Files, Notepad)', 'Weather & Calendar', 'Basic theme support']
+  },
+  {
+    id: 'lite',
+    name: 'Ref OS Lite',
+    description: 'Minimal installation for lightweight systems.',
+    size: '1.2 GB',
+    features: ['File Explorer & Notepad', 'Terminal', 'Settings']
+  }
+];
 
 const installationSteps = [
   { phase: 'Preparing installation', items: ['Checking system requirements...', 'Allocating disk space...', 'Creating partition table...'] },
@@ -21,6 +55,8 @@ const Installer: React.FC = () => {
   const [currentPhase, setCurrentPhase] = useState(0);
   const [currentItem, setCurrentItem] = useState(0);
   const [installLog, setInstallLog] = useState<string[]>([]);
+  const [selectedEdition, setSelectedEdition] = useState<string>('ultimate');
+  const [installerStep, setInstallerStep] = useState<'select' | 'confirm' | 'installing'>('select');
   const logRef = useRef<HTMLDivElement>(null);
   
   const totalItems = installationSteps.reduce((acc, step) => acc + step.items.length, 0);
@@ -104,7 +140,56 @@ const Installer: React.FC = () => {
           
           {/* Content with ScrollArea */}
           <ScrollArea className="flex-1 p-6">
-            {!isInstalling ? (
+            {installerStep === 'select' ? (
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Select Your Edition</h3>
+                <p className="text-white/70 text-sm">Choose the Ref OS edition that best fits your needs.</p>
+                <div className="space-y-3">
+                  {osEditions.map(edition => (
+                    <div
+                      key={edition.id}
+                      className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                        selectedEdition === edition.id
+                          ? 'border-refos-primary bg-refos-primary/10'
+                          : 'border-white/10 hover:border-white/30 bg-white/5'
+                      }`}
+                      onClick={() => setSelectedEdition(edition.id)}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                            selectedEdition === edition.id ? 'border-refos-primary' : 'border-white/40'
+                          }`}>
+                            {selectedEdition === edition.id && (
+                              <div className="w-2 h-2 rounded-full bg-refos-primary" />
+                            )}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium text-white">{edition.name}</span>
+                              {edition.recommended && (
+                                <span className="text-[10px] bg-refos-primary/20 text-refos-primary px-1.5 py-0.5 rounded">Recommended</span>
+                              )}
+                            </div>
+                            <p className="text-xs text-white/60 mt-0.5">{edition.description}</p>
+                          </div>
+                        </div>
+                        <span className="text-xs text-white/50">{edition.size}</span>
+                      </div>
+                      {selectedEdition === edition.id && (
+                        <ul className="mt-3 ml-7 space-y-1">
+                          {edition.features.map((f, i) => (
+                            <li key={i} className="text-xs text-white/70 flex items-center gap-1.5">
+                              <Check className="h-3 w-3 text-green-400" /> {f}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : installerStep === 'confirm' ? (
               <div className="space-y-6">
                 <div className="flex items-center justify-center">
                   <div className="w-24 h-24 bg-refos-primary/20 rounded-full flex items-center justify-center">
@@ -115,11 +200,10 @@ const Installer: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                
                 <div className="space-y-4">
-                  <h3 className="text-lg font-medium">Ready to Install Ref OS</h3>
+                  <h3 className="text-lg font-medium">Ready to Install {osEditions.find(e => e.id === selectedEdition)?.name}</h3>
                   <p className="text-white/80">
-                    Ref OS will now be installed on your virtual device. This process will set up all necessary components and prepare your system for first use.
+                    This will set up all necessary components and prepare your system for first use.
                   </p>
                   <div className="p-3 bg-refos-primary/10 rounded border border-refos-primary/20 text-sm">
                     <p className="text-white/90">Components to install:</p>
@@ -130,7 +214,7 @@ const Installer: React.FC = () => {
                       <li>Drivers & Utilities (384 MB)</li>
                       <li>System Configuration (128 MB)</li>
                     </ul>
-                    <p className="mt-2 text-white/60">Total: ~4.5 GB</p>
+                    <p className="mt-2 text-white/60">Total: ~{osEditions.find(e => e.id === selectedEdition)?.size}</p>
                   </div>
                 </div>
               </div>
@@ -215,13 +299,27 @@ const Installer: React.FC = () => {
           
           {/* Footer */}
           <div className="p-4 border-t border-white/10 flex justify-between items-center bg-refos-window/80">
-            {!isInstalling ? (
+            {installerStep === 'select' ? (
               <>
-                <div className="text-sm text-white/70">
-                  Click Install to begin
-                </div>
+                <div className="text-sm text-white/70">Choose an edition</div>
                 <Button 
-                  onClick={startInstallation} 
+                  onClick={() => setInstallerStep('confirm')} 
+                  className="bg-refos-primary hover:bg-refos-primary/80"
+                >
+                  Next <ChevronRight className="ml-1 h-4 w-4" />
+                </Button>
+              </>
+            ) : installerStep === 'confirm' ? (
+              <>
+                <Button 
+                  variant="outline"
+                  onClick={() => setInstallerStep('select')}
+                  className="text-white border-white/20 hover:bg-white/10 hover:text-white"
+                >
+                  Back
+                </Button>
+                <Button 
+                  onClick={() => { setInstallerStep('installing'); startInstallation(); }} 
                   className="bg-refos-primary hover:bg-refos-primary/80"
                 >
                   Install <ArrowRight className="ml-2 h-4 w-4" />

@@ -13,16 +13,17 @@ export interface BootContextType {
 const BootContext = createContext<BootContextType | undefined>(undefined);
 
 export const BootProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [bootComplete, setBootComplete] = useState(false);
+  const [bootPhase, setBootPhase] = useState<BootPhase>('bios');
 
-  const completeBootSequence = () => {
-    setBootComplete(true);
-  };
+  const completeBIOS = () => setBootPhase('booting');
+  const completeBootSequence = () => setBootPhase('complete');
 
   return (
     <BootContext.Provider
       value={{
-        bootComplete,
+        bootPhase,
+        bootComplete: bootPhase === 'complete',
+        completeBIOS,
         completeBootSequence,
       }}
     >

@@ -32,10 +32,13 @@ const RefOSContent: React.FC = () => {
   const { apps } = useOS();
   const { isCompleted } = useOOBE();
   const { installComplete } = useInstaller();
-  const { bootComplete, completeBootSequence } = useBoot();
+  const { bootPhase, completeBIOS, completeBootSequence } = useBoot();
 
-  // Don't render anything until boot is completed
-  if (!bootComplete) {
+  if (bootPhase === 'bios') {
+    return <BIOSScreen onBIOSComplete={completeBIOS} />;
+  }
+
+  if (bootPhase === 'booting') {
     return <BootScreen onBootComplete={completeBootSequence} />;
   }
 

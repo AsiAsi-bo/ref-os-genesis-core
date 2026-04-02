@@ -19,6 +19,16 @@ const CURRENT_VERSION = '1.2.0';
 
 const availableUpdates: Update[] = [
   {
+    id: 'refos2-major',
+    name: 'Ref OS 2 — Major Update',
+    version: '2.0.0',
+    size: '1.2 GB',
+    category: 'system',
+    description: 'The biggest update yet! Includes RefMusic, Photos, Paint, redesigned Start Menu with search, Notification Center with quick settings, and a refreshed UI.',
+    date: '2026-04-02',
+    critical: true
+  },
+  {
     id: 'sys-001',
     name: 'Ref OS Core Update',
     version: '1.2.1',

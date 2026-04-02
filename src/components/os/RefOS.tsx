@@ -23,6 +23,9 @@ import Email from '../apps/Email';
 import Store from '../apps/Store';
 import TaskManager from '../apps/TaskManager';
 import UpdateCenter from '../apps/UpdateCenter';
+import MusicPlayer from '../apps/MusicPlayer';
+import Photos from '../apps/Photos';
+import Paint from '../apps/Paint';
 import OOBE from '../oobe/OOBE';
 import Installer from '../installer/Installer';
 import BootScreen from '../boot/BootScreen';
@@ -77,6 +80,12 @@ const RefOSContent: React.FC = () => {
         return <TaskManager />;
       case 'updatecenter':
         return <UpdateCenter />;
+      case 'music':
+        return <MusicPlayer />;
+      case 'photos':
+        return <Photos />;
+      case 'paint':
+        return <Paint />;
       default:
         return <div className="p-4">App not found</div>;
     }

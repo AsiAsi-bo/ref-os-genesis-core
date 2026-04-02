@@ -1,25 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useOS, AppName } from '@/context/OSContext';
 import { 
-  Folder, 
-  FileText, 
-  Calculator, 
-  Settings,
-  User,
-  Power,
-  Cloud,
-  Calendar,
-  Globe,
-  Terminal,
-  Bot,
-  Store,
-  Activity,
-  Download
+  Folder, FileText, Calculator, Settings, User, Power, Cloud, Calendar, Globe, Terminal, Bot, Store, Activity, Download, Music, Image, Paintbrush, Search
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const StartMenu: React.FC = () => {
   const { startMenuOpen, openApp, closeStartMenu } = useOS();
+  const [searchQuery, setSearchQuery] = useState('');
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Define app shortcuts
@@ -91,6 +79,24 @@ const StartMenu: React.FC = () => {
       description: 'Download ready-made software'
     },
     { 
+      name: 'music', 
+      title: 'RefMusic', 
+      icon: <Music size={24} className="text-pink-400" />,
+      description: 'Listen to music'
+    },
+    { 
+      name: 'photos', 
+      title: 'Photos', 
+      icon: <Image size={24} className="text-emerald-400" />,
+      description: 'View and manage photos'
+    },
+    { 
+      name: 'paint', 
+      title: 'Paint', 
+      icon: <Paintbrush size={24} className="text-amber-400" />,
+      description: 'Draw and create art'
+    },
+    { 
       name: 'taskmanager', 
       title: 'Task Manager', 
       icon: <Activity size={24} className="text-orange-400" />,
@@ -109,6 +115,11 @@ const StartMenu: React.FC = () => {
       description: 'Configure system settings'
     }
   ];
+
+  const filteredApps = apps.filter(app =>
+    app.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    app.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -138,14 +149,28 @@ const StartMenu: React.FC = () => {
         "flex flex-col animate-window-open origin-bottom-left"
       )}
     >
+      {/* Search */}
+      <div className="px-4 pt-4 pb-2">
+        <div className="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-2">
+          <Search size={16} className="text-white/40" />
+          <input
+            type="text"
+            placeholder="Search apps..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            className="bg-transparent text-white text-sm outline-none w-full placeholder:text-white/30"
+          />
+        </div>
+      </div>
+
       {/* User area */}
-      <div className="flex items-center p-4 border-b border-white/10">
+      <div className="flex items-center px-4 py-3 border-b border-white/10">
         <div className="w-10 h-10 rounded-full bg-refos-primary flex items-center justify-center">
           <User size={20} className="text-white" />
         </div>
         <div className="ml-3">
           <div className="text-white font-medium">User</div>
-          <div className="text-white/60 text-sm">user@refos</div>
+          <div className="text-white/60 text-sm">Ref OS 2</div>
         </div>
       </div>
 
@@ -153,7 +178,7 @@ const StartMenu: React.FC = () => {
       <div className="flex-1 p-2 overflow-y-auto max-h-[400px]">
         <div className="text-white/60 text-xs font-medium px-2 py-1">APPLICATIONS</div>
         <div className="grid grid-cols-1 gap-1">
-          {apps.map((app) => (
+          {filteredApps.map((app) => (
             <button
               key={app.name}
               className="flex items-center p-2 rounded-md hover:bg-white/10 text-left w-full transition-colors"

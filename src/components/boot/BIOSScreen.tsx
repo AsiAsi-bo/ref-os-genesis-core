@@ -65,7 +65,7 @@ const BIOSScreen: React.FC<BIOSScreenProps> = ({ onBIOSComplete }) => {
       onBIOSComplete();
     }
     if (inSetup) {
-      if (e.key === 'ArrowRight') setSetupTab(t => Math.min(t + 1, 4));
+      if (e.key === 'ArrowRight') setSetupTab(t => Math.min(t + 1, 5));
       if (e.key === 'ArrowLeft') setSetupTab(t => Math.max(t - 1, 0));
     }
   }, [showSetupPrompt, inSetup, onBIOSComplete]);
@@ -75,7 +75,7 @@ const BIOSScreen: React.FC<BIOSScreenProps> = ({ onBIOSComplete }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  const tabs = ['Main', 'Advanced', 'Boot', 'Security', 'Exit'];
+  const tabs = ['Main', 'Advanced', 'Boot', 'Security', 'Developer', 'Exit'];
 
   const tabContent: Record<number, { label: string; value: string }[]> = {
     0: [
@@ -111,6 +111,17 @@ const BIOSScreen: React.FC<BIOSScreenProps> = ({ onBIOSComplete }) => {
       { label: 'Chassis Intrusion', value: 'Disabled' },
     ],
     4: [
+      { label: 'Developer Mode', value: 'Disabled' },
+      { label: 'Debug Console', value: 'Disabled' },
+      { label: 'Verbose Boot Logging', value: 'Disabled' },
+      { label: 'Memory Dump on Crash', value: 'Disabled' },
+      { label: 'Performance Overlay', value: 'Disabled' },
+      { label: 'USB Debugging', value: 'Disabled' },
+      { label: 'Network Packet Logging', value: 'Disabled' },
+      { label: 'Kernel Debug Mode', value: 'Disabled' },
+      { label: 'Safe Mode Boot', value: 'Disabled' },
+    ],
+    5: [
       { label: 'Save Changes & Exit', value: '[Enter]' },
       { label: 'Discard Changes & Exit', value: '[Enter]' },
       { label: 'Load Default Settings', value: '[Enter]' },

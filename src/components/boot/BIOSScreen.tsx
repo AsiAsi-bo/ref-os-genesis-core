@@ -75,7 +75,7 @@ const BIOSScreen: React.FC<BIOSScreenProps> = ({ onBIOSComplete }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  const tabs = ['Main', 'Advanced', 'Boot', 'Security', 'Exit'];
+  const tabs = ['Main', 'Advanced', 'Boot', 'Security', 'Developer', 'Exit'];
 
   const tabContent: Record<number, { label: string; value: string }[]> = {
     0: [

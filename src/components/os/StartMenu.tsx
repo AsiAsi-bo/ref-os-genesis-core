@@ -79,6 +79,24 @@ const StartMenu: React.FC = () => {
       description: 'Download ready-made software'
     },
     { 
+      name: 'music', 
+      title: 'RefMusic', 
+      icon: <Music size={24} className="text-pink-400" />,
+      description: 'Listen to music'
+    },
+    { 
+      name: 'photos', 
+      title: 'Photos', 
+      icon: <Image size={24} className="text-emerald-400" />,
+      description: 'View and manage photos'
+    },
+    { 
+      name: 'paint', 
+      title: 'Paint', 
+      icon: <Paintbrush size={24} className="text-amber-400" />,
+      description: 'Draw and create art'
+    },
+    { 
       name: 'taskmanager', 
       title: 'Task Manager', 
       icon: <Activity size={24} className="text-orange-400" />,
@@ -97,6 +115,11 @@ const StartMenu: React.FC = () => {
       description: 'Configure system settings'
     }
   ];
+
+  const filteredApps = apps.filter(app =>
+    app.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    app.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   // Close menu when clicking outside
   useEffect(() => {

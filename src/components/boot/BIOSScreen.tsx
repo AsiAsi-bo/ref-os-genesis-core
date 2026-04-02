@@ -65,7 +65,7 @@ const BIOSScreen: React.FC<BIOSScreenProps> = ({ onBIOSComplete }) => {
       onBIOSComplete();
     }
     if (inSetup) {
-      if (e.key === 'ArrowRight') setSetupTab(t => Math.min(t + 1, 4));
+      if (e.key === 'ArrowRight') setSetupTab(t => Math.min(t + 1, 5));
       if (e.key === 'ArrowLeft') setSetupTab(t => Math.max(t - 1, 0));
     }
   }, [showSetupPrompt, inSetup, onBIOSComplete]);

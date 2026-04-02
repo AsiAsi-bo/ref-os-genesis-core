@@ -111,6 +111,17 @@ const BIOSScreen: React.FC<BIOSScreenProps> = ({ onBIOSComplete }) => {
       { label: 'Chassis Intrusion', value: 'Disabled' },
     ],
     4: [
+      { label: 'Developer Mode', value: 'Disabled' },
+      { label: 'Debug Console', value: 'Disabled' },
+      { label: 'Verbose Boot Logging', value: 'Disabled' },
+      { label: 'Memory Dump on Crash', value: 'Disabled' },
+      { label: 'Performance Overlay', value: 'Disabled' },
+      { label: 'USB Debugging', value: 'Disabled' },
+      { label: 'Network Packet Logging', value: 'Disabled' },
+      { label: 'Kernel Debug Mode', value: 'Disabled' },
+      { label: 'Safe Mode Boot', value: 'Disabled' },
+    ],
+    5: [
       { label: 'Save Changes & Exit', value: '[Enter]' },
       { label: 'Discard Changes & Exit', value: '[Enter]' },
       { label: 'Load Default Settings', value: '[Enter]' },

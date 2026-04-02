@@ -80,6 +80,12 @@ const RefOSContent: React.FC = () => {
         return <TaskManager />;
       case 'updatecenter':
         return <UpdateCenter />;
+      case 'music':
+        return <MusicPlayer />;
+      case 'photos':
+        return <Photos />;
+      case 'paint':
+        return <Paint />;
       default:
         return <div className="p-4">App not found</div>;
     }

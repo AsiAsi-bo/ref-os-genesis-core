@@ -105,5 +105,26 @@ export const defaultAppConfigs: Record<AppName, Omit<App, 'id' | 'isOpen' | 'isM
     icon: 'download',
     position: { x: 200, y: 100 },
     size: { width: 600, height: 500 }
+  },
+  music: {
+    name: 'music',
+    title: 'RefMusic',
+    icon: 'music',
+    position: { x: 300, y: 200 },
+    size: { width: 450, height: 550 }
+  },
+  photos: {
+    name: 'photos',
+    title: 'Photos',
+    icon: 'image',
+    position: { x: 350, y: 150 },
+    size: { width: 650, height: 500 }
+  },
+  paint: {
+    name: 'paint',
+    title: 'Paint',
+    icon: 'paintbrush',
+    position: { x: 200, y: 150 },
+    size: { width: 700, height: 500 }
   }
 };

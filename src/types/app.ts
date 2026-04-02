@@ -1,4 +1,4 @@
-export type AppName = 'fileExplorer' | 'notepad' | 'calculator' | 'settings' | 'weather' | 'calendar' | 'browser' | 'terminal' | 'refy' | 'movie' | 'game' | 'email' | 'store' | 'taskmanager' | 'updatecenter';
+export type AppName = 'fileExplorer' | 'notepad' | 'calculator' | 'settings' | 'weather' | 'calendar' | 'browser' | 'terminal' | 'refy' | 'movie' | 'game' | 'email' | 'store' | 'taskmanager' | 'updatecenter' | 'music' | 'photos' | 'paint';
 
 export interface App {
   id: string;

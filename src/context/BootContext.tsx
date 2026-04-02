@@ -1,8 +1,12 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
+export type BootPhase = 'bios' | 'booting' | 'complete';
+
 export interface BootContextType {
+  bootPhase: BootPhase;
   bootComplete: boolean;
+  completeBIOS: () => void;
   completeBootSequence: () => void;
 }
 

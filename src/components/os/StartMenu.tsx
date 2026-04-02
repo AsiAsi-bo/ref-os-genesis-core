@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 
 const StartMenu: React.FC = () => {
   const { startMenuOpen, openApp, closeStartMenu } = useOS();
+  const [searchQuery, setSearchQuery] = useState('');
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Define app shortcuts

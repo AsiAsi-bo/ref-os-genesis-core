@@ -26,15 +26,19 @@ import UpdateCenter from '../apps/UpdateCenter';
 import OOBE from '../oobe/OOBE';
 import Installer from '../installer/Installer';
 import BootScreen from '../boot/BootScreen';
+import BIOSScreen from '../boot/BIOSScreen';
 
 const RefOSContent: React.FC = () => {
   const { apps } = useOS();
   const { isCompleted } = useOOBE();
   const { installComplete } = useInstaller();
-  const { bootComplete, completeBootSequence } = useBoot();
+  const { bootPhase, completeBIOS, completeBootSequence } = useBoot();
 
-  // Don't render anything until boot is completed
-  if (!bootComplete) {
+  if (bootPhase === 'bios') {
+    return <BIOSScreen onBIOSComplete={completeBIOS} />;
+  }
+
+  if (bootPhase === 'booting') {
     return <BootScreen onBootComplete={completeBootSequence} />;
   }
 

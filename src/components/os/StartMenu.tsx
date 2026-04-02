@@ -1,20 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useOS, AppName } from '@/context/OSContext';
 import { 
-  Folder, 
-  FileText, 
-  Calculator, 
-  Settings,
-  User,
-  Power,
-  Cloud,
-  Calendar,
-  Globe,
-  Terminal,
-  Bot,
-  Store,
-  Activity,
-  Download
+  Folder, FileText, Calculator, Settings, User, Power, Cloud, Calendar, Globe, Terminal, Bot, Store, Activity, Download, Music, Image, Paintbrush, Search
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

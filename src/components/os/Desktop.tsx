@@ -2,16 +2,7 @@
 import React from 'react';
 import { useOS, AppName } from '@/context/OSContext';
 import { 
-  Folder, 
-  FileText, 
-  Calculator, 
-  Settings,
-  Cloud,
-  Calendar,
-  Globe,
-  Terminal,
-  Bot,
-  Mail
+  Folder, FileText, Calculator, Settings, Cloud, Calendar, Globe, Terminal, Bot, Mail, Music, Image, Paintbrush
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

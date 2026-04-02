@@ -26,6 +26,7 @@ import UpdateCenter from '../apps/UpdateCenter';
 import OOBE from '../oobe/OOBE';
 import Installer from '../installer/Installer';
 import BootScreen from '../boot/BootScreen';
+import BIOSScreen from '../boot/BIOSScreen';
 
 const RefOSContent: React.FC = () => {
   const { apps } = useOS();

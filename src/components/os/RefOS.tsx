@@ -33,10 +33,20 @@ import BootScreen from '../boot/BootScreen';
 import BIOSScreen from '../boot/BIOSScreen';
 
 const RefOSContent: React.FC = () => {
-  const { apps } = useOS();
+  const { apps, toggleStartMenu } = useOS();
   const { isCompleted } = useOOBE();
   const { installComplete } = useInstaller();
   const { bootPhase, completeBIOS, completeBootSequence } = useBoot();
+  const [notifFromGesture, setNotifFromGesture] = useState(false);
+  const osRef = useRef<HTMLDivElement>(null);
+
+  const handleSwipeUp = useCallback(() => toggleStartMenu(), [toggleStartMenu]);
+  const handleSwipeDown = useCallback(() => setNotifFromGesture(prev => !prev), []);
+
+  useTouchGestures(osRef, {
+    onSwipeUp: handleSwipeUp,
+    onSwipeDown: handleSwipeDown,
+  });
 
   if (bootPhase === 'bios') {
     return <BIOSScreen onBIOSComplete={completeBIOS} />;

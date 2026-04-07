@@ -211,6 +211,7 @@ const DraggableWindow: React.FC<DraggableWindowProps> = ({ app, children }) => {
           isFullscreen && "cursor-default"
         )}
         onMouseDown={handleTitleMouseDown}
+        onTouchStart={handleTitleTouchStart}
       >
         <div className="font-medium truncate">{app.title}</div>
         <div className="flex items-center space-x-2">
@@ -252,8 +253,9 @@ const DraggableWindow: React.FC<DraggableWindowProps> = ({ app, children }) => {
       {/* Resize handle - hidden in fullscreen */}
       {!isFullscreen && (
         <div
-          className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize"
+          className="absolute bottom-0 right-0 w-6 h-6 cursor-se-resize touch-none"
           onMouseDown={handleResizeMouseDown}
+          onTouchStart={handleResizeTouchStart}
         >
           <svg 
             width="12" 

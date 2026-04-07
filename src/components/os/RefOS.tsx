@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef, useState, useCallback } from 'react';
+import { useTouchGestures } from '@/hooks/useTouchGestures';
 import { OSProvider, useOS, AppName } from '@/context/OSContext';
 import { OOBEProvider, useOOBE } from '@/context/OOBEContext';
 import { InstallerProvider, useInstaller } from '@/context/InstallerContext';

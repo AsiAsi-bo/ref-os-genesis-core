@@ -107,7 +107,7 @@ const RefOSContent: React.FC = () => {
   }
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-gradient-to-br from-refos-desktop to-refos-desktop/90 select-none">
+    <div ref={osRef} className="h-screen w-screen overflow-hidden bg-gradient-to-br from-refos-desktop to-refos-desktop/90 select-none touch-none">
       {/* OOBE */}
       <OOBE />
 

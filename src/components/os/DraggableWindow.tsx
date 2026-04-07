@@ -130,38 +130,45 @@ const DraggableWindow: React.FC<DraggableWindowProps> = ({ app, children }) => {
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, [isFullscreen, previousState, app.id, moveApp, resizeApp]);
 
-  // Handle mouse move (for both dragging and resizing)
+  // Handle mouse/touch move (for both dragging and resizing)
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMove = (clientX: number, clientY: number) => {
       if (isDragging && !isFullscreen) {
-        const newX = Math.max(0, e.clientX - dragOffset.x);
-        const newY = Math.max(0, e.clientY - dragOffset.y);
-        
+        const newX = Math.max(0, clientX - dragOffset.x);
+        const newY = Math.max(0, clientY - dragOffset.y);
         moveApp(app.id, { x: newX, y: newY });
       } else if (isResizing && !isFullscreen) {
-        const deltaX = e.clientX - resizeStart.x;
-        const deltaY = e.clientY - resizeStart.y;
-        
+        const deltaX = clientX - resizeStart.x;
+        const deltaY = clientY - resizeStart.y;
         const newWidth = Math.max(300, resizeStart.width + deltaX);
         const newHeight = Math.max(200, resizeStart.height + deltaY);
-        
         resizeApp(app.id, { width: newWidth, height: newHeight });
       }
     };
 
-    const handleMouseUp = () => {
+    const handleMouseMove = (e: MouseEvent) => handleMove(e.clientX, e.clientY);
+    const handleTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+      handleMove(e.touches[0].clientX, e.touches[0].clientY);
+    };
+
+    const handleEnd = () => {
       setIsDragging(false);
       setIsResizing(false);
     };
 
     if (isDragging || isResizing) {
       document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('mouseup', handleEnd);
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
+      document.addEventListener('touchend', handleEnd);
     }
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('mouseup', handleEnd);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleEnd);
     };
   }, [isDragging, isResizing, dragOffset, resizeStart, app.id, moveApp, resizeApp, isFullscreen]);
 

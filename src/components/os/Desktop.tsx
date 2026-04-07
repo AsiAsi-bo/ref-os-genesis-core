@@ -37,8 +37,9 @@ const Desktop: React.FC = () => {
       {shortcuts.map((shortcut) => (
         <button
           key={shortcut.name}
-          className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-white/10 focus:bg-white/10 focus:outline-none transition-colors group"
+          className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-white/10 focus:bg-white/10 focus:outline-none transition-colors group touch-manipulation"
           onClick={() => handleShortcutClick(shortcut.name)}
+          onTouchEnd={(e) => { e.preventDefault(); handleShortcutClick(shortcut.name); }}
         >
           <div className="w-10 h-10 flex items-center justify-center text-white group-hover:text-refos-primary transition-colors">
             {shortcut.icon}

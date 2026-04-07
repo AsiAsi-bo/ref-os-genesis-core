@@ -29,44 +29,46 @@ const DraggableWindow: React.FC<DraggableWindowProps> = ({ app, children }) => {
     }
   }, [isActive]);
 
-  // Handle mouse down on title bar (for dragging)
+  // Handle mouse/touch down on title bar (for dragging)
   const handleTitleMouseDown = (e: React.MouseEvent) => {
     if (isResizing || isFullscreen) return;
-    
-    // Only handle left mouse button
     if (e.button !== 0) return;
-    
     e.preventDefault();
     focusApp(app.id);
-    
     const rect = windowRef.current?.getBoundingClientRect();
     if (!rect) return;
-    
     setIsDragging(true);
-    setDragOffset({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    });
+    setDragOffset({ x: e.clientX - rect.left, y: e.clientY - rect.top });
   };
 
-  // Handle resize start
+  const handleTitleTouchStart = (e: React.TouchEvent) => {
+    if (isResizing || isFullscreen) return;
+    focusApp(app.id);
+    const rect = windowRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const touch = e.touches[0];
+    setIsDragging(true);
+    setDragOffset({ x: touch.clientX - rect.left, y: touch.clientY - rect.top });
+  };
+
+  // Handle resize start (mouse + touch)
   const handleResizeMouseDown = (e: React.MouseEvent) => {
     if (isFullscreen) return;
-    
-    // Only handle left mouse button
     if (e.button !== 0) return;
-    
     e.preventDefault();
     e.stopPropagation();
     focusApp(app.id);
-    
     setIsResizing(true);
-    setResizeStart({
-      x: e.clientX,
-      y: e.clientY,
-      width: app.size.width,
-      height: app.size.height
-    });
+    setResizeStart({ x: e.clientX, y: e.clientY, width: app.size.width, height: app.size.height });
+  };
+
+  const handleResizeTouchStart = (e: React.TouchEvent) => {
+    if (isFullscreen) return;
+    e.stopPropagation();
+    focusApp(app.id);
+    const touch = e.touches[0];
+    setIsResizing(true);
+    setResizeStart({ x: touch.clientX, y: touch.clientY, width: app.size.width, height: app.size.height });
   };
 
   // Handle fullscreen toggle
@@ -128,38 +130,45 @@ const DraggableWindow: React.FC<DraggableWindowProps> = ({ app, children }) => {
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, [isFullscreen, previousState, app.id, moveApp, resizeApp]);
 
-  // Handle mouse move (for both dragging and resizing)
+  // Handle mouse/touch move (for both dragging and resizing)
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMove = (clientX: number, clientY: number) => {
       if (isDragging && !isFullscreen) {
-        const newX = Math.max(0, e.clientX - dragOffset.x);
-        const newY = Math.max(0, e.clientY - dragOffset.y);
-        
+        const newX = Math.max(0, clientX - dragOffset.x);
+        const newY = Math.max(0, clientY - dragOffset.y);
         moveApp(app.id, { x: newX, y: newY });
       } else if (isResizing && !isFullscreen) {
-        const deltaX = e.clientX - resizeStart.x;
-        const deltaY = e.clientY - resizeStart.y;
-        
+        const deltaX = clientX - resizeStart.x;
+        const deltaY = clientY - resizeStart.y;
         const newWidth = Math.max(300, resizeStart.width + deltaX);
         const newHeight = Math.max(200, resizeStart.height + deltaY);
-        
         resizeApp(app.id, { width: newWidth, height: newHeight });
       }
     };
 
-    const handleMouseUp = () => {
+    const handleMouseMove = (e: MouseEvent) => handleMove(e.clientX, e.clientY);
+    const handleTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+      handleMove(e.touches[0].clientX, e.touches[0].clientY);
+    };
+
+    const handleEnd = () => {
       setIsDragging(false);
       setIsResizing(false);
     };
 
     if (isDragging || isResizing) {
       document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('mouseup', handleEnd);
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
+      document.addEventListener('touchend', handleEnd);
     }
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('mouseup', handleEnd);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleEnd);
     };
   }, [isDragging, isResizing, dragOffset, resizeStart, app.id, moveApp, resizeApp, isFullscreen]);
 
@@ -202,6 +211,7 @@ const DraggableWindow: React.FC<DraggableWindowProps> = ({ app, children }) => {
           isFullscreen && "cursor-default"
         )}
         onMouseDown={handleTitleMouseDown}
+        onTouchStart={handleTitleTouchStart}
       >
         <div className="font-medium truncate">{app.title}</div>
         <div className="flex items-center space-x-2">
@@ -243,8 +253,9 @@ const DraggableWindow: React.FC<DraggableWindowProps> = ({ app, children }) => {
       {/* Resize handle - hidden in fullscreen */}
       {!isFullscreen && (
         <div
-          className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize"
+          className="absolute bottom-0 right-0 w-6 h-6 cursor-se-resize touch-none"
           onMouseDown={handleResizeMouseDown}
+          onTouchStart={handleResizeTouchStart}
         >
           <svg 
             width="12" 

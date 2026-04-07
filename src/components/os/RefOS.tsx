@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef, useState, useCallback } from 'react';
+import { useTouchGestures } from '@/hooks/useTouchGestures';
 import { OSProvider, useOS, AppName } from '@/context/OSContext';
 import { OOBEProvider, useOOBE } from '@/context/OOBEContext';
 import { InstallerProvider, useInstaller } from '@/context/InstallerContext';
@@ -32,10 +33,20 @@ import BootScreen from '../boot/BootScreen';
 import BIOSScreen from '../boot/BIOSScreen';
 
 const RefOSContent: React.FC = () => {
-  const { apps } = useOS();
+  const { apps, toggleStartMenu } = useOS();
   const { isCompleted } = useOOBE();
   const { installComplete } = useInstaller();
   const { bootPhase, completeBIOS, completeBootSequence } = useBoot();
+  const [notifFromGesture, setNotifFromGesture] = useState(false);
+  const osRef = useRef<HTMLDivElement>(null);
+
+  const handleSwipeUp = useCallback(() => toggleStartMenu(), [toggleStartMenu]);
+  const handleSwipeDown = useCallback(() => setNotifFromGesture(prev => !prev), []);
+
+  useTouchGestures(osRef, {
+    onSwipeUp: handleSwipeUp,
+    onSwipeDown: handleSwipeDown,
+  });
 
   if (bootPhase === 'bios') {
     return <BIOSScreen onBIOSComplete={completeBIOS} />;
@@ -96,7 +107,7 @@ const RefOSContent: React.FC = () => {
   }
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-gradient-to-br from-refos-desktop to-refos-desktop/90 select-none">
+    <div ref={osRef} className="h-screen w-screen overflow-hidden bg-gradient-to-br from-refos-desktop to-refos-desktop/90 select-none touch-none">
       {/* OOBE */}
       <OOBE />
 

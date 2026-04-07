@@ -29,44 +29,46 @@ const DraggableWindow: React.FC<DraggableWindowProps> = ({ app, children }) => {
     }
   }, [isActive]);
 
-  // Handle mouse down on title bar (for dragging)
+  // Handle mouse/touch down on title bar (for dragging)
   const handleTitleMouseDown = (e: React.MouseEvent) => {
     if (isResizing || isFullscreen) return;
-    
-    // Only handle left mouse button
     if (e.button !== 0) return;
-    
     e.preventDefault();
     focusApp(app.id);
-    
     const rect = windowRef.current?.getBoundingClientRect();
     if (!rect) return;
-    
     setIsDragging(true);
-    setDragOffset({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    });
+    setDragOffset({ x: e.clientX - rect.left, y: e.clientY - rect.top });
   };
 
-  // Handle resize start
+  const handleTitleTouchStart = (e: React.TouchEvent) => {
+    if (isResizing || isFullscreen) return;
+    focusApp(app.id);
+    const rect = windowRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const touch = e.touches[0];
+    setIsDragging(true);
+    setDragOffset({ x: touch.clientX - rect.left, y: touch.clientY - rect.top });
+  };
+
+  // Handle resize start (mouse + touch)
   const handleResizeMouseDown = (e: React.MouseEvent) => {
     if (isFullscreen) return;
-    
-    // Only handle left mouse button
     if (e.button !== 0) return;
-    
     e.preventDefault();
     e.stopPropagation();
     focusApp(app.id);
-    
     setIsResizing(true);
-    setResizeStart({
-      x: e.clientX,
-      y: e.clientY,
-      width: app.size.width,
-      height: app.size.height
-    });
+    setResizeStart({ x: e.clientX, y: e.clientY, width: app.size.width, height: app.size.height });
+  };
+
+  const handleResizeTouchStart = (e: React.TouchEvent) => {
+    if (isFullscreen) return;
+    e.stopPropagation();
+    focusApp(app.id);
+    const touch = e.touches[0];
+    setIsResizing(true);
+    setResizeStart({ x: touch.clientX, y: touch.clientY, width: app.size.width, height: app.size.height });
   };
 
   // Handle fullscreen toggle

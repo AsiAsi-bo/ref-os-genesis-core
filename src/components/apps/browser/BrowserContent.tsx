@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import HomePage from './HomePage';
 import LoadingPage from './LoadingPage';
 import NotFoundPage from './NotFoundPage';
@@ -24,6 +24,18 @@ const BrowserContent: React.FC<BrowserContentProps> = ({
   onReturnHome
 }) => {
   const [iframeError, setIframeError] = useState(false);
+  const [iframeLoaded, setIframeLoaded] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const prevUrlRef = useRef(url);
+
+  // Reset error state when URL changes
+  useEffect(() => {
+    if (url !== prevUrlRef.current) {
+      setIframeError(false);
+      setIframeLoaded(false);
+      prevUrlRef.current = url;
+    }
+  }, [url]);
 
   if (isLoading) {
     return <LoadingPage />;
@@ -55,6 +67,9 @@ const BrowserContent: React.FC<BrowserContentProps> = ({
     return <HomePage url={url} onUrlChange={onUrlChange} onNavigate={onNavigate} />;
   }
 
+  // Normalize URL
+  const fullUrl = url.startsWith('http') ? url : `https://${url}`;
+
   // Check if it's a real external URL
   const isExternalUrl = url.includes('.') && (
     url.startsWith('https://') || 
@@ -63,16 +78,13 @@ const BrowserContent: React.FC<BrowserContentProps> = ({
   );
 
   if (isExternalUrl) {
-    const fullUrl = url.startsWith('http') ? url : `https://${url}`;
-    
     if (iframeError) {
       return (
         <div className="flex flex-col items-center justify-center h-full bg-refos-window text-white p-8">
           <div className="text-6xl mb-4">🔒</div>
           <h2 className="text-xl font-semibold mb-2">Cannot Load This Site</h2>
           <p className="text-white/70 text-center max-w-md mb-4">
-            This website doesn't allow embedding. Many sites like Google, Facebook, and others 
-            block iframe access for security reasons.
+            This website doesn't allow embedding. Many sites block iframe access for security reasons.
           </p>
           <p className="text-white/50 text-sm mb-6">
             URL: {fullUrl}
@@ -90,7 +102,7 @@ const BrowserContent: React.FC<BrowserContentProps> = ({
               rel="noopener noreferrer"
               className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded text-white"
             >
-              Open in New Tab
+              Open in Real Browser
             </a>
           </div>
         </div>
@@ -98,17 +110,56 @@ const BrowserContent: React.FC<BrowserContentProps> = ({
     }
 
     return (
-      <iframe
-        src={fullUrl}
-        className="w-full h-full border-0"
-        title="External Website"
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-        onError={() => setIframeError(true)}
-        onLoad={(e) => {
-          // Some sites will load but be blank - we can't easily detect this
-          // due to cross-origin restrictions
-        }}
-      />
+      <div className="relative w-full h-full">
+        {!iframeLoaded && (
+          <div className="absolute inset-0 flex items-center justify-center bg-refos-window">
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-8 h-8 border-2 border-refos-primary border-t-transparent rounded-full animate-spin" />
+              <p className="text-white/60 text-sm">Connecting to {new URL(fullUrl).hostname}...</p>
+            </div>
+          </div>
+        )}
+        <iframe
+          ref={iframeRef}
+          key={fullUrl}
+          src={fullUrl}
+          className="w-full h-full border-0"
+          title="External Website"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
+          referrerPolicy="no-referrer"
+          allow="accelerometer; camera; encrypted-media; geolocation; gyroscope; microphone"
+          onError={() => setIframeError(true)}
+          onLoad={() => {
+            setIframeLoaded(true);
+            // Try to detect blocked pages via timing - if content security policy blocks it,
+            // the frame may load but be blank
+            try {
+              const iframe = iframeRef.current;
+              if (iframe) {
+                // This will throw for cross-origin, which is expected and fine
+                const doc = iframe.contentDocument;
+                if (doc && doc.body && doc.body.innerHTML === '') {
+                  setIframeError(true);
+                }
+              }
+            } catch {
+              // Cross-origin - this is expected for real websites, iframe is working
+            }
+          }}
+        />
+        {iframeLoaded && (
+          <div className="absolute bottom-3 right-3 opacity-0 hover:opacity-100 transition-opacity">
+            <a
+              href={fullUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-1.5 bg-black/70 hover:bg-black/90 rounded text-white text-xs backdrop-blur-sm"
+            >
+              Open in real browser ↗
+            </a>
+          </div>
+        )}
+      </div>
     );
   }
 

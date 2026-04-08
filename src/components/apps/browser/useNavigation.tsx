@@ -7,7 +7,7 @@ interface UseNavigationResult {
   history: string[];
   historyIndex: number;
   isLoading: boolean;
-  handleNavigation: () => void;
+  handleNavigation: (customUrl?: string) => void;
   goBack: () => void;
   goForward: () => void;
   reload: () => void;
@@ -21,18 +21,24 @@ export const useNavigation = (): UseNavigationResult => {
   const [history, setHistory] = useState(['https://refsearch.com']);
   const [historyIndex, setHistoryIndex] = useState(0);
   
-  const handleNavigation = () => {
-    if (url !== history[historyIndex]) {
-      // Add to history if navigating to a new URL
-      setHistory([...history.slice(0, historyIndex + 1), url]);
+  const handleNavigation = (customUrl?: string) => {
+    let targetUrl = customUrl || url;
+    
+    // Auto-prepend https:// for URLs with dots that aren't already prefixed
+    if (targetUrl.includes('.') && !targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
+      targetUrl = 'https://' + targetUrl;
+      setUrl(targetUrl);
+    }
+    
+    if (targetUrl !== history[historyIndex]) {
+      setHistory([...history.slice(0, historyIndex + 1), targetUrl]);
       setHistoryIndex(historyIndex + 1);
     }
     
-    // Simulate page loading
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-    }, 1000);
+    }, 800);
   };
   
   const goBack = () => {

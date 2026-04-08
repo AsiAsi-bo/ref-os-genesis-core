@@ -37,7 +37,7 @@ const WebBrowser: React.FC = () => {
         <AddressBar
           url={url}
           onUrlChange={setUrl}
-          onNavigate={handleNavigation}
+          onNavigate={(customUrl?: string) => handleNavigation(customUrl)}
           displayUrl={urlDisplay()}
         />
       </div>

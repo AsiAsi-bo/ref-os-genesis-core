@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -19,8 +19,8 @@ const AddressBar: React.FC<AddressBarProps> = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [editValue, setEditValue] = useState(url);
+  const submitPendingRef = useRef(false);
 
-  // Sync editValue when url changes externally (e.g. back/forward navigation)
   useEffect(() => {
     if (!isFocused) {
       setEditValue(url);
@@ -33,12 +33,22 @@ const AddressBar: React.FC<AddressBarProps> = ({
   };
 
   const handleBlur = () => {
-    setIsFocused(false);
+    // Delay blur to allow submit to fire first
+    setTimeout(() => {
+      if (!submitPendingRef.current) {
+        setIsFocused(false);
+      }
+      submitPendingRef.current = false;
+    }, 150);
   };
 
   const handleSubmit = () => {
-    onUrlChange(editValue);
-    onNavigate(editValue);
+    submitPendingRef.current = true;
+    const value = editValue.trim();
+    if (value) {
+      onUrlChange(value);
+      onNavigate(value);
+    }
     setIsFocused(false);
   };
 
@@ -62,6 +72,7 @@ const AddressBar: React.FC<AddressBarProps> = ({
         className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 p-0"
         variant="ghost"
         size="icon"
+        onMouseDown={(e) => e.preventDefault()}
         onClick={handleSubmit}
       >
         <Search size={14} className="text-white/60" />

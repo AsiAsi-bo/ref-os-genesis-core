@@ -7,7 +7,7 @@ interface UseNavigationResult {
   history: string[];
   historyIndex: number;
   isLoading: boolean;
-  handleNavigation: () => void;
+  handleNavigation: (customUrl?: string) => void;
   goBack: () => void;
   goForward: () => void;
   reload: () => void;

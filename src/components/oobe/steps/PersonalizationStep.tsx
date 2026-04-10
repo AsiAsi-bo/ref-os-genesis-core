@@ -1,63 +1,70 @@
 
 import React, { useState } from 'react';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Moon, Sun, Monitor, Palette } from 'lucide-react';
+
+const themes = [
+  { value: 'dark', label: 'Dark', icon: Moon, desc: 'Easy on the eyes' },
+  { value: 'light', label: 'Light', icon: Sun, desc: 'Clean and bright' },
+  { value: 'system', label: 'Auto', icon: Monitor, desc: 'Match system' },
+];
 
 const PersonalizationStep: React.FC = () => {
-  const [theme, setTheme] = useState("dark");
-  const [showIcons, setShowIcons] = useState(true);
-  
+  const [theme, setTheme] = useState('dark');
+
   return (
     <div className="space-y-6">
-      <h3 className="text-xl font-medium text-refos-primary">Personalize Your Experience</h3>
-      <p className="text-white/80">
-        Customize how Ref OS looks and behaves to make it your own.
-      </p>
-      
-      <div className="space-y-4">
-        <div>
-          <h4 className="text-lg font-medium mb-2">Select a theme</h4>
-          <RadioGroup defaultValue={theme} onValueChange={setTheme} className="space-y-2">
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="dark" id="dark" />
-              <Label htmlFor="dark" className="cursor-pointer">Dark theme (recommended)</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="light" id="light" />
-              <Label htmlFor="light" className="cursor-pointer">Light theme</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="system" id="system" />
-              <Label htmlFor="system" className="cursor-pointer">Use system theme</Label>
-            </div>
-          </RadioGroup>
+      <div className="space-y-2">
+        <div className="flex items-center gap-2 text-purple-300">
+          <Palette size={18} />
+          <span className="text-xs font-mono tracking-wider uppercase">Personalization</span>
         </div>
-        
-        <div className="pt-4">
-          <h4 className="text-lg font-medium mb-2">Desktop options</h4>
-          <div className="space-y-2">
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="show-icons" 
-                checked={showIcons}
-                onCheckedChange={(checked) => {
-                  if (typeof checked === 'boolean') {
-                    setShowIcons(checked);
-                  }
-                }}
-              />
-              <Label htmlFor="show-icons" className="cursor-pointer">Show desktop icons</Label>
+        <h3 className="text-2xl font-bold text-white">Make it yours</h3>
+        <p className="text-white/50 text-sm">Choose your visual preferences and desktop behavior.</p>
+      </div>
+
+      {/* Theme selector */}
+      <div className="space-y-3">
+        <label className="text-sm font-medium text-white/70">Appearance</label>
+        <div className="grid grid-cols-3 gap-3">
+          {themes.map(({ value, label, icon: Icon, desc }) => (
+            <button
+              key={value}
+              onClick={() => setTheme(value)}
+              className={`
+                relative p-4 rounded-xl border text-left transition-all duration-300 group
+                ${theme === value
+                  ? 'bg-purple-500/10 border-purple-500/40 shadow-lg shadow-purple-500/5'
+                  : 'bg-white/[0.02] border-white/5 hover:border-white/15 hover:bg-white/[0.04]'
+                }
+              `}
+            >
+              {theme === value && (
+                <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
+              )}
+              <Icon size={20} className={theme === value ? 'text-purple-300' : 'text-white/40'} />
+              <div className="mt-2 text-sm font-medium text-white/90">{label}</div>
+              <div className="text-xs text-white/40">{desc}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop options */}
+      <div className="space-y-3">
+        <label className="text-sm font-medium text-white/70">Desktop</label>
+        <div className="space-y-2">
+          {[
+            { id: 'show-icons', label: 'Show desktop icons', defaultChecked: true },
+            { id: 'show-recent', label: 'Show recent files', defaultChecked: false },
+            { id: 'show-notifications', label: 'Enable notifications', defaultChecked: true },
+          ].map(({ id, label, defaultChecked }) => (
+            <div key={id} className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors">
+              <Checkbox id={id} defaultChecked={defaultChecked} />
+              <Label htmlFor={id} className="cursor-pointer text-sm text-white/80">{label}</Label>
             </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox id="show-recent" />
-              <Label htmlFor="show-recent" className="cursor-pointer">Show recently used files</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox id="show-notifications" defaultChecked />
-              <Label htmlFor="show-notifications" className="cursor-pointer">Show notifications</Label>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

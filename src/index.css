@@ -153,3 +153,75 @@
     letter-spacing: 0.5px;
   }
 }
+
+/* OOBE Styles */
+.oobe-backdrop {
+  animation: oobe-fade-in 0.5s ease-out;
+}
+
+@keyframes oobe-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.oobe-card {
+  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+}
+
+.oobe-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  animation: oobe-float 8s ease-in-out infinite;
+}
+
+.oobe-orb-1 {
+  width: 400px;
+  height: 400px;
+  background: hsl(262, 83%, 58%);
+  top: -10%;
+  right: -5%;
+  animation-delay: 0s;
+}
+
+.oobe-orb-2 {
+  width: 300px;
+  height: 300px;
+  background: hsl(316, 70%, 48%);
+  bottom: -5%;
+  left: -5%;
+  animation-delay: -3s;
+}
+
+.oobe-orb-3 {
+  width: 250px;
+  height: 250px;
+  background: hsl(199, 89%, 48%);
+  top: 50%;
+  left: 50%;
+  animation-delay: -5s;
+}
+
+@keyframes oobe-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -20px) scale(1.05); }
+  66% { transform: translate(-20px, 15px) scale(0.95); }
+}
+
+/* Matrix rain */
+.matrix-column {
+  animation: matrix-fall linear infinite;
+  writing-mode: vertical-lr;
+}
+
+@keyframes matrix-fall {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+.matrix-char {
+  display: block;
+  opacity: 0.8;
+  text-shadow: 0 0 8px hsl(120, 100%, 50%);
+}

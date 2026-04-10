@@ -1,65 +1,49 @@
 
-import React from 'react';
-import { Bot } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useOOBE } from '@/context/OOBEContext';
+import React, { useEffect, useState } from 'react';
+import { Bot, Sparkles, Shield, Palette } from 'lucide-react';
 
 const WelcomeStep: React.FC = () => {
-  const { goToStep } = useOOBE();
-
-  const handleInstallRefOS = () => {
-    goToStep(3); // Go to PersonalizationStep after installation
-  };
+  const [visible, setVisible] = useState(false);
+  useEffect(() => { setVisible(true); }, []);
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-xl font-medium text-refos-primary">Welcome to Ref OS</h3>
-      <p>
-        Thank you for choosing Ref OS for your virtual operating system needs. 
-        This setup wizard will guide you through the initial configuration 
-        process to get your system up and running.
-      </p>
-      <div className="flex justify-center py-6">
-        <div className="w-32 h-32 bg-refos-primary/20 rounded-full flex items-center justify-center">
-          <div className="w-24 h-24 bg-refos-primary/40 rounded-full flex items-center justify-center">
-            <div className="w-16 h-16 bg-refos-primary rounded-full flex items-center justify-center text-3xl font-bold">
-              R
-            </div>
-          </div>
+    <div className={`space-y-6 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+      {/* Hero */}
+      <div className="text-center space-y-4">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-mono tracking-wider">
+          <Sparkles size={12} /> REF OS SETUP
         </div>
-      </div>
-      <p className="text-white/80">
-        During the setup process, you will:
-      </p>
-      <ul className="list-disc list-inside space-y-1 text-white/80">
-        <li>Personalize your desktop experience</li>
-        <li>Configure privacy settings</li>
-        <li>Complete final setup steps</li>
-      </ul>
-      <div className="mt-6 p-4 bg-refos-primary/10 rounded-lg border border-refos-primary/20 flex items-start">
-        <div className="bg-refos-primary/20 h-10 w-10 rounded-full flex items-center justify-center mr-3 mt-1">
-          <Bot size={20} className="text-refos-primary" />
-        </div>
-        <div>
-          <h4 className="font-medium text-refos-primary">Meet Refy, Your Virtual Assistant</h4>
-          <p className="text-white/80 mt-1">
-            Refy is your personal virtual assistant in Ref OS. You can ask Refy to help you navigate the system,
-            open applications, search for information, and much more. Look for the Refy icon on your desktop
-            after completing the setup process.
-          </p>
-        </div>
-      </div>
-      <div className="flex flex-col gap-3 pt-4">
-        <Button 
-          onClick={handleInstallRefOS}
-          className="bg-refos-primary hover:bg-refos-primary/80 text-white font-medium py-3"
-        >
-          Install Ref OS
-        </Button>
-        <p className="text-white/60 text-sm text-center">
-          This will start the installation process and guide you through partition selection.
+        <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent leading-tight">
+          Welcome to<br />
+          <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
+            Ref OS
+          </span>
+        </h2>
+        <p className="text-white/50 max-w-md mx-auto text-sm leading-relaxed">
+          Your new operating system is almost ready. Let's personalize your experience in just a few quick steps.
         </p>
       </div>
+
+      {/* Feature cards */}
+      <div className="grid grid-cols-3 gap-3 pt-2">
+        {[
+          { icon: Palette, label: 'Personalize', desc: 'Make it yours' },
+          { icon: Shield, label: 'Privacy', desc: 'Stay in control' },
+          { icon: Bot, label: 'Refy AI', desc: 'Your assistant' },
+        ].map(({ icon: Icon, label, desc }) => (
+          <div key={label} className="group p-4 rounded-xl bg-white/[0.03] border border-white/5 hover:border-white/15 hover:bg-white/[0.06] transition-all duration-300 text-center">
+            <div className="w-10 h-10 mx-auto rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <Icon size={18} className="text-purple-300" />
+            </div>
+            <div className="text-sm font-medium text-white/90">{label}</div>
+            <div className="text-xs text-white/40 mt-1">{desc}</div>
+          </div>
+        ))}
+      </div>
+
+      <p className="text-center text-white/30 text-xs pt-2">
+        Press <kbd className="px-1.5 py-0.5 rounded bg-white/10 text-white/50 font-mono text-[10px]">Continue</kbd> to begin setup
+      </p>
     </div>
   );
 };

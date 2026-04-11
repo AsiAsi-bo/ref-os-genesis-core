@@ -1,3 +1,4 @@
+
 import React, { useRef, useState, useCallback } from 'react';
 import { useTouchGestures } from '@/hooks/useTouchGestures';
 import { OSProvider, useOS, AppName } from '@/context/OSContext';
@@ -56,49 +57,29 @@ const RefOSContent: React.FC = () => {
     return <BootScreen onBootComplete={completeBootSequence} />;
   }
 
-  // Don't render the OS until both installation and OOBE are completed
   const shouldShowOS = installComplete && isCompleted;
 
   const renderApp = (appName: AppName) => {
     switch (appName) {
-      case 'fileExplorer':
-        return <FileExplorer />;
-      case 'notepad':
-        return <Notepad />;
-      case 'calculator':
-        return <Calculator />;
-      case 'settings':
-        return <Settings />;
-      case 'weather':
-        return <Weather />;
-      case 'calendar':
-        return <Calendar />;
-      case 'browser':
-        return <Browser />;
-      case 'terminal':
-        return <Terminal />;
-      case 'refy':
-        return <Refy />;
-      case 'movie':
-        return <Movie />;
-      case 'game':
-        return <Game />;
-      case 'email':
-        return <Email />;
-      case 'store':
-        return <Store />;
-      case 'taskmanager':
-        return <TaskManager />;
-      case 'updatecenter':
-        return <UpdateCenter />;
-      case 'music':
-        return <MusicPlayer />;
-      case 'photos':
-        return <Photos />;
-      case 'paint':
-        return <Paint />;
-      default:
-        return <div className="p-4">App not found</div>;
+      case 'fileExplorer': return <FileExplorer />;
+      case 'notepad': return <Notepad />;
+      case 'calculator': return <Calculator />;
+      case 'settings': return <Settings />;
+      case 'weather': return <Weather />;
+      case 'calendar': return <Calendar />;
+      case 'browser': return <Browser />;
+      case 'terminal': return <Terminal />;
+      case 'refy': return <Refy />;
+      case 'movie': return <Movie />;
+      case 'game': return <Game />;
+      case 'email': return <Email />;
+      case 'store': return <Store />;
+      case 'taskmanager': return <TaskManager />;
+      case 'updatecenter': return <UpdateCenter />;
+      case 'music': return <MusicPlayer />;
+      case 'photos': return <Photos />;
+      case 'paint': return <Paint />;
+      default: return <div className="p-4">App not found</div>;
     }
   };
 
@@ -107,7 +88,7 @@ const RefOSContent: React.FC = () => {
   }
 
   return (
-    <div ref={osRef} className="h-screen w-screen overflow-hidden bg-gradient-to-br from-refos-desktop to-refos-desktop/90 select-none touch-none">
+    <div ref={osRef} className="h-screen w-screen overflow-hidden desktop-wallpaper select-none touch-none">
       {/* OOBE */}
       <OOBE />
 
@@ -115,7 +96,7 @@ const RefOSContent: React.FC = () => {
       {shouldShowOS && (
         <>
           {/* Desktop */}
-          <div className="absolute inset-0 bottom-12">
+          <div className="absolute inset-0 bottom-16">
             <Desktop />
           </div>
 
@@ -129,7 +110,7 @@ const RefOSContent: React.FC = () => {
           {/* Start Menu */}
           <StartMenu />
 
-          {/* TaskBar */}
+          {/* TaskBar / Dock */}
           <TaskBar />
         </>
       )}

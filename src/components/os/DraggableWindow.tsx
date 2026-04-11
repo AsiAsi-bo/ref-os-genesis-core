@@ -22,14 +22,10 @@ const DraggableWindow: React.FC<DraggableWindowProps> = ({ app, children }) => {
 
   const isActive = activeAppId === app.id;
 
-  // Handle initial focus
   useEffect(() => {
-    if (isActive && windowRef.current) {
-      windowRef.current.focus();
-    }
+    if (isActive && windowRef.current) windowRef.current.focus();
   }, [isActive]);
 
-  // Handle mouse/touch down on title bar (for dragging)
   const handleTitleMouseDown = (e: React.MouseEvent) => {
     if (isResizing || isFullscreen) return;
     if (e.button !== 0) return;
@@ -51,7 +47,6 @@ const DraggableWindow: React.FC<DraggableWindowProps> = ({ app, children }) => {
     setDragOffset({ x: touch.clientX - rect.left, y: touch.clientY - rect.top });
   };
 
-  // Handle resize start (mouse + touch)
   const handleResizeMouseDown = (e: React.MouseEvent) => {
     if (isFullscreen) return;
     if (e.button !== 0) return;
@@ -71,14 +66,9 @@ const DraggableWindow: React.FC<DraggableWindowProps> = ({ app, children }) => {
     setResizeStart({ x: touch.clientX, y: touch.clientY, width: app.size.width, height: app.size.height });
   };
 
-  // Handle fullscreen toggle
   const handleFullscreenToggle = () => {
     if (isFullscreen) {
-      // Exit browser fullscreen if active
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
-      }
-      // Restore to previous state
+      if (document.fullscreenElement) document.exitFullscreen();
       if (previousState) {
         moveApp(app.id, previousState.position);
         resizeApp(app.id, previousState.size);
@@ -86,37 +76,26 @@ const DraggableWindow: React.FC<DraggableWindowProps> = ({ app, children }) => {
       setIsFullscreen(false);
       setPreviousState(null);
     } else {
-      // Save current state and go fullscreen
-      setPreviousState({
-        position: app.position,
-        size: app.size
-      });
+      setPreviousState({ position: app.position, size: app.size });
       moveApp(app.id, { x: 0, y: 0 });
-      resizeApp(app.id, { width: window.innerWidth, height: window.innerHeight - 48 }); // Account for taskbar
+      resizeApp(app.id, { width: window.innerWidth, height: window.innerHeight - 64 });
       setIsFullscreen(true);
     }
   };
 
-  // Handle browser fullscreen for games
   const handleBrowserFullscreen = async () => {
     if (!windowRef.current) return;
-    
     try {
-      if (document.fullscreenElement) {
-        await document.exitFullscreen();
-      } else {
-        await windowRef.current.requestFullscreen();
-      }
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else await windowRef.current.requestFullscreen();
     } catch (error) {
       console.warn('Fullscreen not supported:', error);
     }
   };
 
-  // Listen for fullscreen changes
   useEffect(() => {
     const handleFullscreenChange = () => {
       if (!document.fullscreenElement && isFullscreen) {
-        // Browser exited fullscreen, update our state
         if (previousState) {
           moveApp(app.id, previousState.position);
           resizeApp(app.id, previousState.size);
@@ -125,37 +104,25 @@ const DraggableWindow: React.FC<DraggableWindowProps> = ({ app, children }) => {
         setPreviousState(null);
       }
     };
-
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, [isFullscreen, previousState, app.id, moveApp, resizeApp]);
 
-  // Handle mouse/touch move (for both dragging and resizing)
   useEffect(() => {
     const handleMove = (clientX: number, clientY: number) => {
       if (isDragging && !isFullscreen) {
-        const newX = Math.max(0, clientX - dragOffset.x);
-        const newY = Math.max(0, clientY - dragOffset.y);
-        moveApp(app.id, { x: newX, y: newY });
+        moveApp(app.id, { x: Math.max(0, clientX - dragOffset.x), y: Math.max(0, clientY - dragOffset.y) });
       } else if (isResizing && !isFullscreen) {
-        const deltaX = clientX - resizeStart.x;
-        const deltaY = clientY - resizeStart.y;
-        const newWidth = Math.max(300, resizeStart.width + deltaX);
-        const newHeight = Math.max(200, resizeStart.height + deltaY);
-        resizeApp(app.id, { width: newWidth, height: newHeight });
+        resizeApp(app.id, {
+          width: Math.max(300, resizeStart.width + clientX - resizeStart.x),
+          height: Math.max(200, resizeStart.height + clientY - resizeStart.y),
+        });
       }
     };
 
     const handleMouseMove = (e: MouseEvent) => handleMove(e.clientX, e.clientY);
-    const handleTouchMove = (e: TouchEvent) => {
-      e.preventDefault();
-      handleMove(e.touches[0].clientX, e.touches[0].clientY);
-    };
-
-    const handleEnd = () => {
-      setIsDragging(false);
-      setIsResizing(false);
-    };
+    const handleTouchMove = (e: TouchEvent) => { e.preventDefault(); handleMove(e.touches[0].clientX, e.touches[0].clientY); };
+    const handleEnd = () => { setIsDragging(false); setIsResizing(false); };
 
     if (isDragging || isResizing) {
       document.addEventListener('mousemove', handleMouseMove);
@@ -163,7 +130,6 @@ const DraggableWindow: React.FC<DraggableWindowProps> = ({ app, children }) => {
       document.addEventListener('touchmove', handleTouchMove, { passive: false });
       document.addEventListener('touchend', handleEnd);
     }
-
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleEnd);
@@ -172,25 +138,16 @@ const DraggableWindow: React.FC<DraggableWindowProps> = ({ app, children }) => {
     };
   }, [isDragging, isResizing, dragOffset, resizeStart, app.id, moveApp, resizeApp, isFullscreen]);
 
-  // Handle window click (for focus)
-  const handleWindowClick = () => {
-    if (!isActive) {
-      focusApp(app.id);
-    }
-  };
-
-  if (app.isMinimized) {
-    return null;
-  }
+  if (app.isMinimized) return null;
 
   return (
     <div
       ref={windowRef}
       className={cn(
-        "fixed rounded-lg overflow-hidden shadow-lg animate-window-open",
-        "border border-refos-window/20 bg-refos-window text-white",
-        isActive ? "ring-1 ring-refos-primary shadow-xl" : "shadow-md",
-        isFullscreen && "!rounded-none"
+        "fixed overflow-hidden animate-window-open",
+        isFullscreen ? "rounded-none" : "rounded-xl",
+        "glass",
+        isActive ? "shadow-2xl ring-1 ring-white/10" : "shadow-lg opacity-95"
       )}
       style={{
         left: `${app.position.x}px`,
@@ -199,78 +156,74 @@ const DraggableWindow: React.FC<DraggableWindowProps> = ({ app, children }) => {
         height: `${app.size.height}px`,
         zIndex: app.zIndex,
       }}
-      onClick={handleWindowClick}
+      onClick={() => !isActive && focusApp(app.id)}
       tabIndex={0}
     >
-      {/* Window titlebar */}
-      <div 
+      {/* macOS-style titlebar */}
+      <div
         className={cn(
-          "h-9 px-3 flex items-center justify-between",
-          "bg-gradient-to-r from-refos-primary to-refos-secondary",
-          "cursor-move select-none",
+          "h-10 px-3 flex items-center gap-3 border-b border-white/[0.06]",
+          "bg-white/[0.03] cursor-move select-none",
           isFullscreen && "cursor-default"
         )}
         onMouseDown={handleTitleMouseDown}
         onTouchStart={handleTitleTouchStart}
       >
-        <div className="font-medium truncate">{app.title}</div>
-        <div className="flex items-center space-x-2">
-          <button 
-            className="p-1 rounded-sm hover:bg-white/20"
+        {/* Traffic lights */}
+        <div className="traffic-lights flex items-center gap-1.5" onClick={e => e.stopPropagation()}>
+          <button
+            className="traffic-light bg-[#FF5F57] hover:brightness-110"
+            onClick={() => closeApp(app.id)}
+          >
+            <X size={8} strokeWidth={2.5} className="text-[#4a0002]" />
+          </button>
+          <button
+            className="traffic-light bg-[#FEBC2E] hover:brightness-110"
             onClick={() => minimizeApp(app.id)}
           >
-            <Minus size={14} />
+            <Minus size={8} strokeWidth={2.5} className="text-[#5a3d00]" />
           </button>
-          <button 
-            className="p-1 rounded-sm hover:bg-white/20"
+          <button
+            className="traffic-light bg-[#28C840] hover:brightness-110"
             onClick={handleFullscreenToggle}
           >
-            {isFullscreen ? <Minimize size={14} /> : <Maximize size={14} />}
+            <Maximize size={7} strokeWidth={2.5} className="text-[#0a4a00]" />
           </button>
           {app.name === 'game' && (
-            <button 
-              className="p-1 rounded-sm hover:bg-white/20"
+            <button
+              className="traffic-light bg-refos-primary/60 hover:bg-refos-primary ml-1"
               onClick={handleBrowserFullscreen}
               title="Browser Fullscreen"
             >
-              <Expand size={14} />
+              <Expand size={7} strokeWidth={2.5} className="text-white/80" />
             </button>
           )}
-          <button 
-            className="p-1 rounded-sm hover:bg-white/20"
-            onClick={() => closeApp(app.id)}
-          >
-            <X size={14} />
-          </button>
         </div>
+
+        {/* Title - centered */}
+        <div className="flex-1 text-center">
+          <span className="text-[13px] font-medium text-white/70">{app.title}</span>
+        </div>
+
+        {/* Spacer to balance traffic lights */}
+        <div className="w-[52px]" />
       </div>
 
       {/* Window content */}
-      <div className="absolute inset-0 top-9 overflow-auto">
+      <div className="absolute inset-0 top-10 overflow-auto bg-refos-window/90">
         {children}
       </div>
 
-      {/* Resize handle - hidden in fullscreen */}
+      {/* Resize handle */}
       {!isFullscreen && (
         <div
-          className="absolute bottom-0 right-0 w-6 h-6 cursor-se-resize touch-none"
+          className="absolute bottom-0 right-0 w-5 h-5 cursor-se-resize touch-none"
           onMouseDown={handleResizeMouseDown}
           onTouchStart={handleResizeTouchStart}
         >
-          <svg 
-            width="12" 
-            height="12" 
-            viewBox="0 0 12 12" 
-            fill="none" 
-            xmlns="http://www.w3.org/2000/svg"
-            className="absolute bottom-1 right-1"
-          >
-            <path 
-              d="M11 11L1 1M11 1L1 11" 
-              stroke="white" 
-              strokeOpacity="0.5" 
-              strokeWidth="2" 
-            />
+          <svg width="10" height="10" viewBox="0 0 10 10" className="absolute bottom-1 right-1 text-white/20">
+            <line x1="9" y1="1" x2="1" y2="9" stroke="currentColor" strokeWidth="1.5" />
+            <line x1="9" y1="5" x2="5" y2="9" stroke="currentColor" strokeWidth="1.5" />
           </svg>
         </div>
       )}

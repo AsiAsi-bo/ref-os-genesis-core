@@ -40,41 +40,27 @@ const Calculator: React.FC = () => {
 
   const performOperation = (nextOperation: string) => {
     const inputValue = parseFloat(display);
-
     if (previousValue === null) {
       setPreviousValue(inputValue);
     } else if (operation) {
       const currentValue = previousValue || 0;
       let newValue: number;
-
       switch (operation) {
-        case "+":
-          newValue = currentValue + inputValue;
-          break;
-        case "-":
-          newValue = currentValue - inputValue;
-          break;
-        case "×":
-          newValue = currentValue * inputValue;
-          break;
-        case "÷":
-          newValue = currentValue / inputValue;
-          break;
-        default:
-          newValue = inputValue;
+        case "+": newValue = currentValue + inputValue; break;
+        case "-": newValue = currentValue - inputValue; break;
+        case "×": newValue = currentValue * inputValue; break;
+        case "÷": newValue = currentValue / inputValue; break;
+        default: newValue = inputValue;
       }
-
       setPreviousValue(newValue);
       setDisplay(String(newValue));
     }
-
     setWaitingForOperand(true);
     setOperation(nextOperation);
   };
 
   const handlePercent = () => {
-    const value = parseFloat(display);
-    setDisplay(String(value / 100));
+    setDisplay(String(parseFloat(display) / 100));
   };
 
   const buttons = [
@@ -100,29 +86,32 @@ const Calculator: React.FC = () => {
   ];
 
   return (
-    <div className="h-full flex flex-col bg-refos-window/80">
+    <div className="h-full flex flex-col bg-refos-window">
       {/* Display */}
-      <div className="p-4 bg-refos-window text-right">
-        <div className="font-mono text-3xl text-white truncate">{display}</div>
+      <div className="p-6 text-right">
+        <div className="text-xs text-white/30 h-5">
+          {previousValue !== null && operation ? `${previousValue} ${operation}` : ''}
+        </div>
+        <div className="font-light text-4xl text-white tracking-tight truncate">{display}</div>
       </div>
 
       {/* Keypad */}
-      <div className="flex-1 grid grid-cols-4 gap-1 p-2">
+      <div className="flex-1 grid grid-cols-4 gap-[1px] p-2">
         {buttons.map((button, index) => (
-          <Button
+          <button
             key={index}
             onClick={button.action}
             className={cn(
-              "rounded-lg font-medium text-xl",
-              button.type === "operator" && "bg-refos-accent hover:bg-refos-accent/80",
-              button.type === "equals" && "bg-refos-primary hover:bg-refos-primary/80",
-              button.type === "function" && "bg-refos-window/80 hover:bg-refos-window/60",
-              button.type === "digit" && "bg-refos-window/50 hover:bg-refos-window/30",
+              "rounded-xl font-light text-xl transition-all active:scale-95",
+              button.type === "operator" && "bg-refos-primary/80 hover:bg-refos-primary text-white",
+              button.type === "equals" && "bg-refos-primary hover:bg-refos-primary/90 text-white",
+              button.type === "function" && "bg-white/[0.08] hover:bg-white/[0.12] text-white/80",
+              button.type === "digit" && "bg-white/[0.04] hover:bg-white/[0.08] text-white",
               button.text === "0" && "col-span-2"
             )}
           >
             {button.text}
-          </Button>
+          </button>
         ))}
       </div>
     </div>

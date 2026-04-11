@@ -17,7 +17,6 @@ const Notepad: React.FC = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check if content changed from saved version
     if (currentFile) {
       setHasUnsavedChanges(text !== currentFile.content);
     } else {
@@ -25,7 +24,6 @@ const Notepad: React.FC = () => {
     }
   }, [text, currentFile]);
 
-  // Check for file to open from File Explorer
   useEffect(() => {
     const openFileData = sessionStorage.getItem('openFile');
     if (openFileData) {
@@ -39,15 +37,10 @@ const Notepad: React.FC = () => {
     }
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setText(e.target.value);
-  };
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => setText(e.target.value);
 
   const handleNewFile = () => {
-    if (hasUnsavedChanges) {
-      const confirmed = window.confirm('You have unsaved changes. Are you sure you want to create a new file?');
-      if (!confirmed) return;
-    }
+    if (hasUnsavedChanges && !window.confirm('You have unsaved changes. Create a new file?')) return;
     setText('');
     setCurrentFile(null);
     setFileName('Untitled.txt');
@@ -56,50 +49,29 @@ const Notepad: React.FC = () => {
 
   const handleSave = () => {
     if (currentFile) {
-      // Save existing file
       const updatedFile = fileSystem.saveFile(currentFile.name, text, currentFile.id);
       setCurrentFile(updatedFile);
       setHasUnsavedChanges(false);
-      toast({
-        title: "File saved",
-        description: `${updatedFile.name} has been saved successfully.`,
-      });
+      toast({ title: "File saved", description: `${updatedFile.name} has been saved.` });
     } else {
-      // Save as new file
       setShowSaveDialog(true);
     }
   };
 
-  const handleSaveAs = () => {
-    setFileName(currentFile?.name || 'Untitled.txt');
-    setShowSaveDialog(true);
-  };
-
   const handleSaveConfirm = () => {
     if (!fileName.trim()) {
-      toast({
-        title: "Error",
-        description: "Please enter a valid file name.",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: "Please enter a valid file name.", variant: "destructive" });
       return;
     }
-
     const savedFile = fileSystem.saveFile(fileName, text);
     setCurrentFile(savedFile);
     setHasUnsavedChanges(false);
     setShowSaveDialog(false);
-    toast({
-      title: "File saved",
-      description: `${savedFile.name} has been saved successfully.`,
-    });
+    toast({ title: "File saved", description: `${savedFile.name} has been saved.` });
   };
 
   const handleOpen = () => {
-    if (hasUnsavedChanges) {
-      const confirmed = window.confirm('You have unsaved changes. Are you sure you want to open another file?');
-      if (!confirmed) return;
-    }
+    if (hasUnsavedChanges && !window.confirm('You have unsaved changes. Open another file?')) return;
     setShowOpenDialog(true);
   };
 
@@ -108,70 +80,60 @@ const Notepad: React.FC = () => {
     setCurrentFile(file);
     setHasUnsavedChanges(false);
     setShowOpenDialog(false);
-    toast({
-      title: "File opened",
-      description: `${file.name} has been opened.`,
-    });
+    toast({ title: "File opened", description: `${file.name} has been opened.` });
   };
 
   const allFiles = fileSystem.getAllFiles();
 
   return (
     <>
-      <div className="h-full flex flex-col">
+      <div className="h-full flex flex-col bg-refos-window">
         {/* Toolbar */}
-        <div className="h-10 bg-refos-window/80 border-b border-white/10 flex items-center px-2 gap-1">
-          <Button variant="ghost" size="sm" className="h-8 text-white/80 hover:text-white hover:bg-white/10" onClick={handleNewFile}>
-            <Plus size={16} className="mr-1" />
-            New
-          </Button>
-          <Button variant="ghost" size="sm" className="h-8 text-white/80 hover:text-white hover:bg-white/10" onClick={handleOpen}>
-            <FolderOpen size={16} className="mr-1" />
-            Open
-          </Button>
-          <Button variant="ghost" size="sm" className="h-8 text-white/80 hover:text-white hover:bg-white/10" onClick={handleSave}>
-            <Save size={16} className="mr-1" />
-            Save{hasUnsavedChanges && '*'}
-          </Button>
-          <div className="ml-auto text-xs text-white/60">
-            {currentFile ? currentFile.name : fileName}{hasUnsavedChanges && ' (unsaved)'}
+        <div className="h-10 border-b border-white/[0.06] flex items-center px-3 gap-1 bg-white/[0.02]">
+          <button onClick={handleNewFile} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[12px] text-white/60 hover:text-white hover:bg-white/[0.06] transition-all">
+            <Plus size={14} /> New
+          </button>
+          <button onClick={handleOpen} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[12px] text-white/60 hover:text-white hover:bg-white/[0.06] transition-all">
+            <FolderOpen size={14} /> Open
+          </button>
+          <button onClick={handleSave} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[12px] text-white/60 hover:text-white hover:bg-white/[0.06] transition-all">
+            <Save size={14} /> Save{hasUnsavedChanges && '*'}
+          </button>
+          <div className="ml-auto text-[11px] text-white/30">
+            {currentFile ? currentFile.name : fileName}{hasUnsavedChanges && ' · Edited'}
           </div>
         </div>
 
         {/* Editor */}
         <textarea
-          className="flex-1 bg-refos-window p-4 outline-none resize-none text-white font-mono text-sm leading-relaxed"
+          className="flex-1 bg-transparent p-5 outline-none resize-none text-white/90 font-mono text-sm leading-relaxed placeholder:text-white/20"
           value={text}
           onChange={handleChange}
           spellCheck="false"
-          placeholder="Start typing your document..."
+          placeholder="Start typing..."
         />
       </div>
 
       {/* Save Dialog */}
       <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
-        <DialogContent className="bg-refos-window border border-white/20">
+        <DialogContent className="glass border-white/[0.08] text-white">
           <DialogHeader>
-            <DialogTitle className="text-white">Save File</DialogTitle>
+            <DialogTitle className="text-white font-medium">Save File</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="text-sm text-white/80 block mb-2">File name:</label>
+              <label className="text-xs text-white/40 block mb-2">File name</label>
               <Input
                 value={fileName}
                 onChange={(e) => setFileName(e.target.value)}
-                className="bg-white/10 border-white/20 text-white"
+                className="bg-white/[0.06] border-white/[0.08] text-white rounded-xl"
                 placeholder="Enter file name..."
                 onKeyDown={(e) => e.key === 'Enter' && handleSaveConfirm()}
               />
             </div>
             <div className="flex gap-2 justify-end">
-              <Button variant="ghost" onClick={() => setShowSaveDialog(false)} className="text-white/80 hover:text-white">
-                Cancel
-              </Button>
-              <Button onClick={handleSaveConfirm} className="bg-blue-600 hover:bg-blue-700 text-white">
-                Save
-              </Button>
+              <Button variant="ghost" onClick={() => setShowSaveDialog(false)} className="text-white/60 hover:text-white rounded-xl">Cancel</Button>
+              <Button onClick={handleSaveConfirm} className="bg-refos-primary hover:bg-refos-primary/80 text-white rounded-xl">Save</Button>
             </div>
           </div>
         </DialogContent>
@@ -179,37 +141,31 @@ const Notepad: React.FC = () => {
 
       {/* Open Dialog */}
       <Dialog open={showOpenDialog} onOpenChange={setShowOpenDialog}>
-        <DialogContent className="bg-refos-window border border-white/20 max-w-md">
+        <DialogContent className="glass border-white/[0.08] text-white max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-white">Open File</DialogTitle>
+            <DialogTitle className="text-white font-medium">Open File</DialogTitle>
           </DialogHeader>
-          <div className="space-y-2 max-h-64 overflow-y-auto">
+          <div className="space-y-1 max-h-64 overflow-y-auto">
             {allFiles.length === 0 ? (
-              <div className="text-white/60 text-center py-4">
-                No saved files found
-              </div>
+              <div className="text-white/30 text-center py-8 text-sm">No saved files found</div>
             ) : (
               allFiles.map((file) => (
                 <div
                   key={file.id}
-                  className="flex items-center p-2 rounded hover:bg-white/10 cursor-pointer"
+                  className="flex items-center p-3 rounded-xl hover:bg-white/[0.06] cursor-pointer transition-colors"
                   onClick={() => handleOpenFile(file)}
                 >
-                  <FileText size={16} className="text-blue-400 mr-2" />
+                  <FileText size={16} className="text-refos-primary/60 mr-3" />
                   <div className="flex-1">
-                    <div className="text-white text-sm">{file.name}</div>
-                    <div className="text-white/60 text-xs">
-                      {file.size} • Modified {file.modified}
-                    </div>
+                    <div className="text-white/80 text-sm">{file.name}</div>
+                    <div className="text-white/30 text-xs">{file.size} · {file.modified}</div>
                   </div>
                 </div>
               ))
             )}
           </div>
           <div className="flex justify-end">
-            <Button variant="ghost" onClick={() => setShowOpenDialog(false)} className="text-white/80 hover:text-white">
-              Cancel
-            </Button>
+            <Button variant="ghost" onClick={() => setShowOpenDialog(false)} className="text-white/60 hover:text-white rounded-xl">Cancel</Button>
           </div>
         </DialogContent>
       </Dialog>

@@ -75,51 +75,43 @@ export default {
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
+				sm: 'calc(var(--radius) - 4px)',
+				xl: 'calc(var(--radius) + 4px)',
+				'2xl': 'calc(var(--radius) + 8px)'
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
 				},
 				'window-open': {
-					'0%': { 
-						opacity: '0',
-						transform: 'scale(0.95)'
-					},
-					'100%': { 
-						opacity: '1',
-						transform: 'scale(1)'
-					}
+					'0%': { opacity: '0', transform: 'scale(0.92)' },
+					'100%': { opacity: '1', transform: 'scale(1)' }
 				},
 				'window-close': {
-					'0%': { 
-						opacity: '1',
-						transform: 'scale(1)'
-					},
-					'100%': { 
-						opacity: '0',
-						transform: 'scale(0.95)'
-					}
-				}
+					'0%': { opacity: '1', transform: 'scale(1)' },
+					'100%': { opacity: '0', transform: 'scale(0.92)' }
+				},
+				'slide-up': {
+					'0%': { opacity: '0', transform: 'translateY(12px)' },
+					'100%': { opacity: '1', transform: 'translateY(0)' }
+				},
+				'fade-in': {
+					'0%': { opacity: '0', transform: 'translateY(10px)' },
+					'100%': { opacity: '1', transform: 'translateY(0)' }
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'window-open': 'window-open 0.2s ease-out',
-				'window-close': 'window-close 0.2s ease-out'
+				'window-open': 'window-open 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+				'window-close': 'window-close 0.2s ease-out',
+				'slide-up': 'slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+				'fade-in': 'fade-in 0.3s ease-out',
 			}
 		}
 	},

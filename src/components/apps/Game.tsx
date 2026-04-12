@@ -5,9 +5,13 @@ import Pong from './games/Pong';
 import Tetris from './games/Tetris';
 import Breakout from './games/Breakout';
 import GameBuilder from './games/GameBuilder';
-import { Wrench } from 'lucide-react';
+import Game2048 from './games/Game2048';
+import FlappyBird from './games/FlappyBird';
+import MemoryMatch from './games/MemoryMatch';
+import ColorTap from './games/ColorTap';
+import { Wrench, Tablet } from 'lucide-react';
 
-type GameType = 'menu' | 'snake' | 'pong' | 'tetris' | 'breakout' | 'marios' | 'freakpostor' | 'builder';
+type GameType = 'menu' | 'snake' | 'pong' | 'tetris' | 'breakout' | 'marios' | 'freakpostor' | 'builder' | '2048' | 'flappy' | 'memory' | 'simon';
 
 const Game: React.FC = () => {
   const [activeGame, setActiveGame] = useState<GameType>('menu');
@@ -21,6 +25,13 @@ const Game: React.FC = () => {
     { id: 'freakpostor', name: 'Freakpostor', description: 'FNF Among Us mod', icon: '👻' },
   ];
 
+  const touchGames = [
+    { id: '2048', name: '2048', description: 'Swipe to merge tiles', icon: '🔢', touch: true },
+    { id: 'flappy', name: 'Flappy Bird', description: 'Tap to fly', icon: '🐤', touch: true },
+    { id: 'memory', name: 'Memory Match', description: 'Find matching pairs', icon: '🃏', touch: true },
+    { id: 'simon', name: 'Simon Says', description: 'Repeat the pattern', icon: '🎨', touch: true },
+  ];
+
   const renderGame = () => {
     switch (activeGame) {
       case 'snake':
@@ -31,8 +42,11 @@ const Game: React.FC = () => {
         return <Tetris />;
       case 'breakout':
         return <Breakout />;
-      case 'builder':
-        return <GameBuilder />;
+      case 'builder': return <GameBuilder />;
+      case '2048': return <Game2048 />;
+      case 'flappy': return <FlappyBird />;
+      case 'memory': return <MemoryMatch />;
+      case 'simon': return <ColorTap />;
       case 'marios':
         return (
           <div className="w-full h-full bg-black rounded-lg overflow-hidden">
@@ -85,6 +99,32 @@ const Game: React.FC = () => {
               </button>
             </div>
             
+            {/* Touch-Friendly Games */}
+            <div className="max-w-2xl mx-auto mb-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Tablet className="w-4 h-4 text-white/60" />
+                <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider">iPad & Touch Friendly</h3>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {touchGames.map((game) => (
+                  <button
+                    key={game.id}
+                    onClick={() => setActiveGame(game.id as GameType)}
+                    className="bg-white/10 hover:bg-white/20 text-white p-4 rounded-xl transition-colors border border-cyan-400/20 hover:border-cyan-400/40"
+                    style={{ touchAction: 'manipulation' }}
+                  >
+                    <div className="text-3xl mb-2">{game.icon}</div>
+                    <div className="text-sm font-semibold mb-0.5">{game.name}</div>
+                    <div className="text-xs text-white/50">{game.description}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Classic Games */}
+            <div className="max-w-2xl mx-auto mb-2">
+              <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider mb-3">Classic Games</h3>
+            </div>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
               {games.map((game) => (
                 <button

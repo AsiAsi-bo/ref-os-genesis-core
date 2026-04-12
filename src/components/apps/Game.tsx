@@ -5,9 +5,13 @@ import Pong from './games/Pong';
 import Tetris from './games/Tetris';
 import Breakout from './games/Breakout';
 import GameBuilder from './games/GameBuilder';
-import { Wrench } from 'lucide-react';
+import Game2048 from './games/Game2048';
+import FlappyBird from './games/FlappyBird';
+import MemoryMatch from './games/MemoryMatch';
+import ColorTap from './games/ColorTap';
+import { Wrench, Tablet } from 'lucide-react';
 
-type GameType = 'menu' | 'snake' | 'pong' | 'tetris' | 'breakout' | 'marios' | 'freakpostor' | 'builder';
+type GameType = 'menu' | 'snake' | 'pong' | 'tetris' | 'breakout' | 'marios' | 'freakpostor' | 'builder' | '2048' | 'flappy' | 'memory' | 'simon';
 
 const Game: React.FC = () => {
   const [activeGame, setActiveGame] = useState<GameType>('menu');

@@ -99,6 +99,32 @@ const Game: React.FC = () => {
               </button>
             </div>
             
+            {/* Touch-Friendly Games */}
+            <div className="max-w-2xl mx-auto mb-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Tablet className="w-4 h-4 text-white/60" />
+                <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider">iPad & Touch Friendly</h3>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {touchGames.map((game) => (
+                  <button
+                    key={game.id}
+                    onClick={() => setActiveGame(game.id as GameType)}
+                    className="bg-white/10 hover:bg-white/20 text-white p-4 rounded-xl transition-colors border border-cyan-400/20 hover:border-cyan-400/40"
+                    style={{ touchAction: 'manipulation' }}
+                  >
+                    <div className="text-3xl mb-2">{game.icon}</div>
+                    <div className="text-sm font-semibold mb-0.5">{game.name}</div>
+                    <div className="text-xs text-white/50">{game.description}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Classic Games */}
+            <div className="max-w-2xl mx-auto mb-2">
+              <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider mb-3">Classic Games</h3>
+            </div>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
               {games.map((game) => (
                 <button

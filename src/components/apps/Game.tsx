@@ -25,6 +25,13 @@ const Game: React.FC = () => {
     { id: 'freakpostor', name: 'Freakpostor', description: 'FNF Among Us mod', icon: '👻' },
   ];
 
+  const touchGames = [
+    { id: '2048', name: '2048', description: 'Swipe to merge tiles', icon: '🔢', touch: true },
+    { id: 'flappy', name: 'Flappy Bird', description: 'Tap to fly', icon: '🐤', touch: true },
+    { id: 'memory', name: 'Memory Match', description: 'Find matching pairs', icon: '🃏', touch: true },
+    { id: 'simon', name: 'Simon Says', description: 'Repeat the pattern', icon: '🎨', touch: true },
+  ];
+
   const renderGame = () => {
     switch (activeGame) {
       case 'snake':

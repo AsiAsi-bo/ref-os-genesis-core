@@ -42,8 +42,11 @@ const Game: React.FC = () => {
         return <Tetris />;
       case 'breakout':
         return <Breakout />;
-      case 'builder':
-        return <GameBuilder />;
+      case 'builder': return <GameBuilder />;
+      case '2048': return <Game2048 />;
+      case 'flappy': return <FlappyBird />;
+      case 'memory': return <MemoryMatch />;
+      case 'simon': return <ColorTap />;
       case 'marios':
         return (
           <div className="w-full h-full bg-black rounded-lg overflow-hidden">
